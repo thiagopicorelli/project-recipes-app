@@ -1,12 +1,13 @@
 import { screen, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+// import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWith';
 import App from '../App';
 
 describe('Testa o Header', () => {
+  const pageTitle = 'page-title';
   test('Se o Header não é renderizado na página de Login', () => {
     renderWithRouter(<App />);
-    const title = screen.queryByTestId('page-title');
+    const title = screen.queryByTestId(pageTitle);
     expect(title).not.toBeInTheDocument();
   });
   test('Se o Header é renderizado na página de Meals', () => {
@@ -14,7 +15,7 @@ describe('Testa o Header', () => {
     act(() => {
       history.push('/meals');
     });
-    const title = screen.getByTestId('page-title');
+    const title = screen.getByTestId(pageTitle);
     expect(title).toBeInTheDocument();
   });
   test('Se o Header é renderizado na página de Drinks', () => {
@@ -22,7 +23,7 @@ describe('Testa o Header', () => {
     act(() => {
       history.push('/drinks');
     });
-    const title = screen.getByTestId('page-title');
+    const title = screen.getByTestId(pageTitle);
     expect(title).toBeInTheDocument();
   });
   test('Se o Header é renderizado na página de Profile', () => {
@@ -30,7 +31,7 @@ describe('Testa o Header', () => {
     act(() => {
       history.push('/profile');
     });
-    const title = screen.getByTestId('page-title');
+    const title = screen.getByTestId(pageTitle);
     expect(title).toBeInTheDocument();
   });
   test('Se o Header é renderizado na página de Done Recipes', () => {
@@ -38,7 +39,7 @@ describe('Testa o Header', () => {
     act(() => {
       history.push('/done-recipes');
     });
-    const title = screen.getByTestId('page-title');
+    const title = screen.getByTestId(pageTitle);
     expect(title).toBeInTheDocument();
   });
   test('Se o Header é renderizado na página de Favorite Recipes', () => {
@@ -46,7 +47,7 @@ describe('Testa o Header', () => {
     act(() => {
       history.push('/favorite-recipes');
     });
-    const title = screen.getByTestId('page-title');
+    const title = screen.getByTestId(pageTitle);
     expect(title).toBeInTheDocument();
   });
 });

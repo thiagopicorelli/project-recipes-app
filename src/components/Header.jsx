@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 
@@ -49,11 +49,13 @@ function Header() {
             <div data-testid="page-title">
               { pageTitle }
             </div>
-            <img
-              src={ profileIcon }
-              alt="Ícone de perfil"
-              data-testid="profile-top-btn"
-            />
+            <Link to="/profile">
+              <img
+                src={ profileIcon }
+                alt="Ícone de perfil"
+                data-testid="profile-top-btn"
+              />
+            </Link>
             { searchVisible
               && (
                 <img
