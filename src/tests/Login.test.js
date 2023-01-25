@@ -32,4 +32,17 @@ describe('Testes de login', () => {
 
     expect(loginBtn).toBeEnabled();
   });
+
+  test('Verifica se ao clicar no botão de login, redireciona para tela principal de receitas de comidas', () => {
+    const { history } = renderWithRouter(<App />);
+
+    const emailEl = screen.getByRole('textbox');
+    const passwdEl = screen.getByPlaceholderText(/password/i);
+    const loginBtn = screen.getByRole('button', { name: /enter/i });
+
+    userEvent.type(emailEl, email);
+    userEvent.type(passwdEl, password);
+    userEvent.click(loginBtn);
+    expect(history.location.pathname).toBe('/meals');
+  });
 });

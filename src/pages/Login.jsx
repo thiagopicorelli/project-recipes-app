@@ -1,15 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Row } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthProvider';
 
-function Login() {
+function Login({ history }) {
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
   });
 
-  const { btnDisabled, validateBtn } = useContext(AuthContext);
+  const {
+    btnDisabled,
+    validateBtn,
+    saveToLocalStorage,
+  } = useContext(AuthContext);
 
   useEffect(() => {
     validateBtn(loginData);
@@ -18,6 +23,8 @@ function Login() {
   // useEffect(() => { console.log(test.current.value); }, [test]);
   const handleSubmit = (e) => {
     e.preventDefault();
+    saveToLocalStorage(loginData.email);
+    history.push('/meals');
   };
 
   const handleChange = ({ target: { value, name } }) => {
@@ -67,5 +74,9 @@ function Login() {
     </Container>
   );
 }
+
+Login.propTypes = {
+  history: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default Login;

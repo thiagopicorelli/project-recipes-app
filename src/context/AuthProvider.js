@@ -13,9 +13,15 @@ export default function AuthProvider({ children }) {
     setBtnDisabled(!(emailValid && passwdValid));
   };
 
+  const saveToLocalStorage = (email) => {
+    const emailJson = JSON.stringify({ email });
+    localStorage.setItem('user', emailJson);
+  };
+
   const value = useMemo(() => ({
     btnDisabled,
     validateBtn,
+    saveToLocalStorage,
   }), [btnDisabled]);
 
   return (
