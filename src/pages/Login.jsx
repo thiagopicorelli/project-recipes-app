@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Row } from 'react-bootstrap';
+import { AuthContext } from '../context/AuthProvider';
 
 function Login() {
-  // const email = useRef('');
-  // const password = useRef('');
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
   });
-  const [btnDisabled, setBtnDisabled] = useState(true);
+
+  const { btnDisabled, validateBtn } = useContext(AuthContext);
 
   useEffect(() => {
-    const validateBtn = () => {
-      const MIN_PASSWD = 6;
-      const emailRegex = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gm;
-
-      const emailValid = emailRegex.test(loginData.email);
-      const passwdValid = loginData.password.length > MIN_PASSWD;
-      return !(emailValid && passwdValid);
-    };
-
-    setBtnDisabled(validateBtn());
+    validateBtn(loginData);
   }, [loginData]);
 
   // useEffect(() => { console.log(test.current.value); }, [test]);
