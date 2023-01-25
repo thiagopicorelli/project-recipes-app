@@ -2,12 +2,14 @@ import { React, useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header() {
   const location = useLocation();
   const [visible, setVisible] = useState(true);
   const [searchVisible, setSearchVisible] = useState(true);
   const [pageTitle, setTitle] = useState('');
+  const [inputVisible, setInputVisible] = useState(false);
 
   useEffect(() => {
     switch (location.pathname) {
@@ -56,13 +58,16 @@ function Header() {
                 data-testid="profile-top-btn"
               />
             </Link>
+            {inputVisible && <SearchBar /> }
             { searchVisible
               && (
-                <img
-                  src={ searchIcon }
-                  alt="Ícone de pesquisa"
-                  data-testid="search-top-btn"
-                />
+                <button onClick={ () => { setInputVisible(!inputVisible); } }>
+                  <img
+                    src={ searchIcon }
+                    alt="Ícone de pesquisa"
+                    data-testid="search-top-btn"
+                  />
+                </button>
               )}
           </div>
         )}
