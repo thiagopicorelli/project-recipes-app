@@ -17,6 +17,7 @@ function App() {
   return (
     <AppProvider>
       <AuthProvider>
+        <Header />
         <Switch>
           <Route exact path="/" component={ Login } />
           <Route exact path="/meals" component={ Recipes } />
