@@ -41,7 +41,7 @@ function Header() {
     default:
       setVisible(false);
     }
-  });
+  }, [location]);
 
   return (
     <div>

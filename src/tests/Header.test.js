@@ -58,7 +58,7 @@ describe('Testa o Header', () => {
     const searchBar = screen.queryByTestId('search-input');
     expect(searchBar).not.toBeInTheDocument();
   });
-  test('Se a barra de pesquisa está oculta antes do click', () => {
+  test('Se a barra de pesquisa é renderizada após o click', () => {
     const { history } = renderWithRouter(<App />);
     act(() => {
       history.push('/meals');
