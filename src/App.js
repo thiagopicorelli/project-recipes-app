@@ -10,6 +10,7 @@ import RecipeDetails from './pages/RecipeDetails';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
+import Header from './components/Header';
 import AuthProvider from './context/AuthProvider';
 
 function App() {
@@ -29,7 +30,6 @@ function App() {
           <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
         </Switch>
       </AuthProvider>
-
     </AppProvider>
 
   );
