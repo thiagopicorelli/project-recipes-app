@@ -1,4 +1,4 @@
-import { screen, act, waitFor } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
@@ -48,7 +48,7 @@ describe('Testa o componente SearchBar', () => {
     });
     expect(global.fetch).toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
 
-    await new Promise(res => setTimeout(res, 1000));
+    await new Promise((res) => { setTimeout(res, 1000); });
 
     expect(screen.getByTestId('0-card-name')).toHaveTextContent('drink');
   });
