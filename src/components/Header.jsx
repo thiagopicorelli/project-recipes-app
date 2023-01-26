@@ -1,77 +1,73 @@
 import { React, useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Container, Navbar, Nav, Button, Collapse } from 'react-bootstrap';
+import { Link, useLocation } from 'react-router-dom';
+import useHeader from '../hooks/useHeader';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 
 function Header() {
-  const location = useLocation();
-  const [visible, setVisible] = useState(true);
-  const [searchVisible, setSearchVisible] = useState(true);
-  const [pageTitle, setTitle] = useState('');
   const [inputVisible, setInputVisible] = useState(false);
+  const location = useLocation();
+  const { visible, searchVisible, pageTitle, getHeaderInfo } = useHeader();
 
   useEffect(() => {
-    switch (location.pathname) {
-    case '/meals':
-      setVisible(true);
-      setSearchVisible(true);
-      setTitle('Meals');
-      break;
-    case '/drinks':
-      setVisible(true);
-      setSearchVisible(true);
-      setTitle('Drinks');
-      break;
-    case '/profile':
-      setVisible(true);
-      setSearchVisible(false);
-      setTitle('Profile');
-      break;
-    case '/done-recipes':
-      setVisible(true);
-      setSearchVisible(false);
-      setTitle('Done Recipes');
-      break;
-    case '/favorite-recipes':
-      setVisible(true);
-      setSearchVisible(false);
-      setTitle('Favorite Recipes');
-      break;
-    default:
-      setVisible(false);
-    }
-  }, [location]);
+    getHeaderInfo(location);
+  }, [location, getHeaderInfo]);
 
   return (
-    <div>
-      { visible
+    <>
+      <Navbar bg="primary" variant="dark" className="mb-2">
+        { visible
         && (
-          <div>
-            <div data-testid="page-title">
+          <Container>
+            <Navbar.Brand data-testid="page-title">
               { pageTitle }
-            </div>
-            <Link to="/profile">
+            </Navbar.Brand>
+            <Nav.Link as={ Link } to="/profile">
               <img
                 src={ profileIcon }
                 alt="Ícone de perfil"
                 data-testid="profile-top-btn"
+                className="icon-light"
               />
-            </Link>
-            {inputVisible && <SearchBar /> }
+            </Nav.Link>
             { searchVisible
               && (
-                <button onClick={ () => { setInputVisible(!inputVisible); } }>
+                <Button
+                  onClick={ () => { setInputVisible(!inputVisible); } }
+                  variant="primary"
+                  size="sm"
+                  aria-controls="collapse-search"
+                  aria-expanded={ inputVisible }
+                >
                   <img
                     src={ searchIcon }
                     alt="Ícone de pesquisa"
                     data-testid="search-top-btn"
+                    className="icon-light"
                   />
-                </button>
+                </Button>
               )}
-          </div>
+          </Container>
         )}
-    </div>
+
+      </Navbar>
+      {/* {(inputVisible && visible) && (
+        <Container
+          className="mb-2"
+          id="collapse-search"
+        >
+          <SearchBar />
+        </Container>
+      ) } */}
+      <Collapse in={ inputVisible }>
+        <Container id="collapse-search">
+          {inputVisible && (<SearchBar />)}
+        </Container>
+      </Collapse>
+    </>
+
   );
 }
 

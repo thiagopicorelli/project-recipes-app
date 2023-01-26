@@ -19,13 +19,14 @@ export default function Footer() {
               src={ drinkIcon }
               alt="drink link button"
               data-testid="drinks-bottom-btn"
+              className="icon-light"
             />
           </Nav.Link>
         </Col>
         <Col className="justify">
           <Nav.Link as={ Link } to="/meals">
             <img
-              className="mealIcon"
+              className="icon-light"
               src={ mealIcon }
               alt="meal link button"
               data-testid="meals-bottom-btn"

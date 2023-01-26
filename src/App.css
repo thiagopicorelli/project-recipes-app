@@ -66,3 +66,7 @@
     transform: rotate(-10deg);
   }
 }
+
+.icon-light {
+  filter: invert(100%) opacity(86%);
+}
