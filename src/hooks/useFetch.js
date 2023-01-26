@@ -32,7 +32,7 @@ export default function useFetch() {
     return fetchAPI(url);
   };
 
-  const fetchCategories = async (pageName) => fetchAPI(`https://www.the${pageName}db.com/api/json/v1/1/list.php?c=list`);
+  const fetchCategories = (pageName) => fetchAPI(`https://www.the${pageName}db.com/api/json/v1/1/list.php?c=list`);
 
   return {
     fetchData,

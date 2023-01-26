@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useEffect, useState } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Button, Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 
@@ -31,20 +31,19 @@ export default function Categories() {
 
   return (
     <Container>
-      <Row>
+      <Stack direction="horizontal" className="col-md-4 mx-auto">
         {
           categoriesList.map(({ strCategory }) => (
-            <Col key={ `cat-${strCategory}` }>
-              <Button
-                variant="outline-dark"
-                data-testid={ `${strCategory}-category-filter` }
-              >
-                {strCategory}
-              </Button>
-            </Col>
+            <Button
+              key={ `cat-${strCategory}` }
+              variant="outline-dark"
+              data-testid={ `${strCategory}-category-filter` }
+            >
+              {strCategory}
+            </Button>
           ))
         }
-      </Row>
+      </Stack>
     </Container>
   );
 }
