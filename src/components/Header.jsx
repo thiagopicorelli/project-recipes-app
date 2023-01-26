@@ -1,4 +1,5 @@
 import { React, useEffect, useState } from 'react';
+import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { useLocation, Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
@@ -44,34 +45,49 @@ function Header() {
   }, [location]);
 
   return (
-    <div>
-      { visible
+    <>
+      <Navbar bg="primary" variant="dark" className="mb-2">
+        { visible
         && (
-          <div>
-            <div data-testid="page-title">
+          <Container>
+            <Navbar.Brand data-testid="page-title">
               { pageTitle }
-            </div>
-            <Link to="/profile">
+            </Navbar.Brand>
+            <Nav.Link as={ Link } to="/profile">
               <img
                 src={ profileIcon }
                 alt="Ícone de perfil"
                 data-testid="profile-top-btn"
               />
-            </Link>
-            {inputVisible && <SearchBar /> }
+            </Nav.Link>
             { searchVisible
               && (
-                <button onClick={ () => { setInputVisible(!inputVisible); } }>
+                <Button
+                  onClick={ () => { setInputVisible(!inputVisible); } }
+                  variant="primary"
+                  size="sm"
+                >
                   <img
                     src={ searchIcon }
                     alt="Ícone de pesquisa"
                     data-testid="search-top-btn"
                   />
-                </button>
+                </Button>
               )}
-          </div>
+          </Container>
         )}
-    </div>
+
+      </Navbar>
+      {(inputVisible && visible) && (
+        <Container
+          className="mb-2"
+          id="collapse-search"
+        >
+          <SearchBar />
+        </Container>
+      ) }
+    </>
+
   );
 }
 

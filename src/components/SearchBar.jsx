@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { Form, InputGroup, Button } from 'react-bootstrap';
 
 function SearchBar() {
   const [radioOption, setRadioOption] = useState('ingredient');
@@ -29,49 +30,53 @@ function SearchBar() {
   };
 
   return (
-    <div>
-      <input
-        data-testid="search-input"
-        value={ searchInput }
-        onChange={ (event) => { setSearchInput(event.target.value); } }
-      />
-      <div onChange={ onChangeHandler }>
-        <label htmlFor="option">
-          Ingredient
-          <input
-            type="radio"
-            data-testid="ingredient-search-radio"
-            name="option"
-            value="ingredient"
-          />
-        </label>
-        <label htmlFor="option">
-          Name
-          <input
-            type="radio"
-            data-testid="name-search-radio"
-            name="option"
-            value="name"
-          />
-        </label>
-        <label htmlFor="option">
-          First Letter
-          <input
-            type="radio"
-            data-testid="first-letter-search-radio"
-            name="option"
-            value="first-letter"
-          />
-        </label>
-      </div>
-      <button
-        type="submit"
-        data-testid="exec-search-btn"
-        onClick={ onClickHandler }
-      >
-        Search
-      </button>
-    </div>
+    <>
+      <InputGroup size="sm">
+        <Form.Control
+          data-testid="search-input"
+          value={ searchInput }
+          onChange={ (event) => { setSearchInput(event.target.value); } }
+          placeholder="Search"
+        />
+        <Button
+          type="submit"
+          data-testid="exec-search-btn"
+          onClick={ onClickHandler }
+        >
+          Search
+        </Button>
+      </InputGroup>
+      <InputGroup size="sm" onChange={ onChangeHandler }>
+        <Form.Check
+          inline
+          type="radio"
+          data-testid="ingredient-search-radio"
+          name="option"
+          value="ingredient"
+          label="Ingredient"
+        />
+
+        <Form.Check
+          inline
+          type="radio"
+          data-testid="name-search-radio"
+          name="option"
+          value="name"
+          label="Name"
+        />
+
+        <Form.Check
+          inline
+          type="radio"
+          data-testid="first-letter-search-radio"
+          name="option"
+          value="first-letter"
+          label="First letter"
+        />
+
+      </InputGroup>
+
+    </>
   );
 }
 
