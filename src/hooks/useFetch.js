@@ -28,8 +28,13 @@ export default function useFetch() {
     return json;
   };
 
+  const fetchCategories = () => {
+
+  };
+
   return {
     fetchData,
+    fetchCategories,
     isLoading,
   };
 }
