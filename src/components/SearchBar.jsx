@@ -1,33 +1,40 @@
-import { React, useState } from 'react';
+import { React, useContext, useState, useCallback } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
+import { AppContext } from '../context/AppProvider';
 
 function SearchBar() {
   const [radioOption, setRadioOption] = useState('ingredient');
   const [searchInput, setSearchInput] = useState('');
+  const location = useLocation();
+  const { fetchData, setSearchData } = useContext(AppContext);
 
-  const onChangeHandler = (event) => {
-    setRadioOption(event.target.value);
-  };
+  const onChangeHandler = useCallback(({ target: { value } }) => {
+    setRadioOption(value);
+  }, []);
 
-  const onClickHandler = () => {
-    switch (radioOption) {
-    case 'ingredient':
-      fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
-      break;
-    case 'name':
-      fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`);
-      break;
-    case 'first-letter':
-      if (searchInput.length > 1) {
-        global.alert('Your search must have only 1 (one) character');
-      } else {
-        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
-      }
-      break;
+  const pageName = useCallback(() => {
+    switch (location.pathname) {
+    case '/drinks':
+      return 'cocktail';
+    case '/meals':
+      return 'meal';
     default:
-      setRadioOption('ingredient');
+      return '';
     }
-  };
+  }, [location.pathname]);
+
+  const onClickHandler = useCallback(async () => {
+    if (searchInput.length > 1 && radioOption === 'first-letter') {
+      global.alert('Your search must have only 1 (one) character');
+      return;
+    }
+
+    const path = location.pathname.replace('/', '');
+    const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
+
+    setSearchData(data[path]);
+  }, [fetchData, pageName, radioOption, searchInput, setSearchData, location.pathname]);
 
   return (
     <>
