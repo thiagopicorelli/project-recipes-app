@@ -16,12 +16,10 @@ function SearchBar() {
 
   const pageName = useCallback(() => {
     switch (location.pathname) {
-    case '/drinks':
-      return 'cocktail';
     case '/meals':
       return 'meal';
-    default:
-      return '';
+    default: // /drinks
+      return 'cocktail';
     }
   }, [location.pathname]);
 
@@ -34,14 +32,36 @@ function SearchBar() {
     const path = location.pathname.replace('/', '');
     const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
 
-    setSearchData(data[path] === null ? [] : data[path]);
+    let idName = '';
+    let strName = '';
+    let thumb = '';
 
-    const idName = path === 'meals' ? 'idMeal' : 'idDrink';
+    if (path === 'meals') {
+      idName = 'idMeal';
+      strName = 'strMeal';
+      thumb = 'strMealThumb';
+    } else {
+      idName = 'idDrink';
+      strName = 'strDrink';
+      thumb = 'strDrinkThumb';
+    }
+
     if (data[path] === null) {
-      global.alert(`Sorry, we haven't found any recipes for these filters.`);
-    } else if (data[path].length === 1) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+      setSearchData([]);
+      return;
+    }
+    if (data[path].length === 1) {
       history.push(`/${path}/${data[path][0][idName]}`);
     }
+
+    data[path].forEach((recipe) => {
+      recipe.id = recipe[idName];
+      recipe.str = recipe[strName];
+      recipe.thumb = recipe[thumb];
+    });
+
+    setSearchData(data[path] === null ? [] : data[path]);
   }, [fetchData, pageName, radioOption, searchInput, setSearchData, location.pathname]);
 
   return (
