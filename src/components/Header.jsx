@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react';
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, Button, Collapse } from 'react-bootstrap';
 import { useLocation, Link } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
@@ -67,6 +67,8 @@ function Header() {
                   onClick={ () => { setInputVisible(!inputVisible); } }
                   variant="primary"
                   size="sm"
+                  aria-controls="collapse-search"
+                  aria-expanded={ inputVisible }
                 >
                   <img
                     src={ searchIcon }
@@ -80,14 +82,19 @@ function Header() {
         )}
 
       </Navbar>
-      {(inputVisible && visible) && (
+      {/* {(inputVisible && visible) && (
         <Container
           className="mb-2"
           id="collapse-search"
         >
           <SearchBar />
         </Container>
-      ) }
+      ) } */}
+      <Collapse in={ inputVisible }>
+        <Container id="collapse-search">
+          {inputVisible && (<SearchBar />)}
+        </Container>
+      </Collapse>
     </>
 
   );
