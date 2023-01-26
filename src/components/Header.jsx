@@ -58,6 +58,7 @@ function Header() {
                 src={ profileIcon }
                 alt="Ícone de perfil"
                 data-testid="profile-top-btn"
+                className="icon-light"
               />
             </Nav.Link>
             { searchVisible
@@ -71,6 +72,7 @@ function Header() {
                     src={ searchIcon }
                     alt="Ícone de pesquisa"
                     data-testid="search-top-btn"
+                    className="icon-light"
                   />
                 </Button>
               )}
