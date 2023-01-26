@@ -3,6 +3,12 @@ import { useState } from 'react';
 export default function useFetch() {
   const [isLoading, setIsLoading] = useState(false);
 
+  const fetchAPI = async (url) => {
+    const response = await fetch(url);
+    const json = await response.json();
+    return json;
+  };
+
   const fetchData = async (pageName, radioOption, input) => {
     setIsLoading(true);
     let url;
@@ -22,14 +28,15 @@ export default function useFetch() {
       url = '';
     }
 
-    const response = await fetch(url);
-    const json = await response.json();
     setIsLoading(false);
-    return json;
+    return fetchAPI(url);
   };
+
+  const fetchCategories = (pageName) => fetchAPI(`https://www.the${pageName}db.com/api/json/v1/1/list.php?c=list`);
 
   return {
     fetchData,
+    fetchCategories,
     isLoading,
   };
 }

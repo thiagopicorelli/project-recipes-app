@@ -15,9 +15,10 @@ describe('Testa o componente SearchBar', () => {
       history.push('/meals');
     });
     const searchBtn = screen.getByTestId(searchTopBtn);
-    userEvent.click(searchBtn);
+    act(() => userEvent.click(searchBtn));
+
     const nameRadio = screen.getByTestId(nameSearchRadio);
-    userEvent.click(nameRadio);
+    act(() => userEvent.click(nameRadio));
     const ingredientRadio = screen.getByTestId('ingredient-search-radio');
     expect(ingredientRadio).not.toBeChecked();
   });

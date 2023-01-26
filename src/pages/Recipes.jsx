@@ -2,6 +2,7 @@ import React, { useCallback, useContext } from 'react';
 import { Card, Container, Stack } from 'react-bootstrap';
 import { AppContext } from '../context/AppProvider';
 import Footer from '../components/Footer';
+import Categories from '../components/Categories';
 
 function Recipes() {
   const { searchData } = useContext(AppContext);
@@ -38,6 +39,7 @@ function Recipes() {
 
   return (
     <>
+      <Categories />
       <Container>
         <h1 className="mb-3">Recipes</h1>
         <Stack
