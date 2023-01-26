@@ -34,10 +34,12 @@ function SearchBar() {
     const path = location.pathname.replace('/', '');
     const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
 
-    setSearchData(data[path]);
+    setSearchData(data[path] === null ? [] : data[path]);
 
     const idName = path === 'meals' ? 'idMeal' : 'idDrink';
-    if (data[path].length === 1) {
+    if (data[path] === null) {
+      global.alert(`Sorry, we haven't found any recipes for these filters.`);
+    } else if (data[path].length === 1) {
       history.push(`/${path}/${data[path][0][idName]}`);
     }
   }, [fetchData, pageName, radioOption, searchInput, setSearchData, location.pathname]);

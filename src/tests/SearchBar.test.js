@@ -126,4 +126,31 @@ describe('Testa o componente SearchBar', () => {
     });
   });
 
+  test('Se o alert aparece quando não há elementos retornados pelo fetch', () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue({meals: null}),
+    });
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+    const searchBtn = screen.getByTestId('search-top-btn');
+    act(() => {
+      userEvent.click(searchBtn);
+    });
+    const firstLetterRadio = screen.getByTestId('first-letter-search-radio');
+    act(() => {
+      userEvent.click(firstLetterRadio);
+    });
+    const execSearchBtn = screen.getByTestId('exec-search-btn');
+    act(() => {
+      userEvent.click(execSearchBtn);
+    });
+    waitFor(() => {
+      expect(window.alert).toHaveBeenCalled();
+    });
+  });
+
 });
