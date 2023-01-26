@@ -1,12 +1,13 @@
 import { React, useContext, useState, useCallback } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 
 function SearchBar() {
   const [radioOption, setRadioOption] = useState('ingredient');
   const [searchInput, setSearchInput] = useState('');
   const location = useLocation();
+  const history = useHistory();
   const { fetchData, setSearchData } = useContext(AppContext);
 
   const onChangeHandler = useCallback(({ target: { value } }) => {
@@ -15,12 +16,10 @@ function SearchBar() {
 
   const pageName = useCallback(() => {
     switch (location.pathname) {
-    case '/drinks':
-      return 'cocktail';
     case '/meals':
       return 'meal';
-    default:
-      return '';
+    default: // /drinks
+      return 'cocktail';
     }
   }, [location.pathname]);
 
@@ -33,8 +32,45 @@ function SearchBar() {
     const path = location.pathname.replace('/', '');
     const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
 
-    setSearchData(data[path]);
-  }, [fetchData, pageName, radioOption, searchInput, setSearchData, location.pathname]);
+    let idName = '';
+    let strName = '';
+    let thumb = '';
+
+    if (path === 'meals') {
+      idName = 'idMeal';
+      strName = 'strMeal';
+      thumb = 'strMealThumb';
+    } else {
+      idName = 'idDrink';
+      strName = 'strDrink';
+      thumb = 'strDrinkThumb';
+    }
+
+    if (data[path] === null) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+      setSearchData([]);
+      return;
+    }
+    if (data[path].length === 1) {
+      history.push(`/${path}/${data[path][0][idName]}`);
+    }
+
+    data[path].forEach((recipe) => {
+      recipe.id = recipe[idName];
+      recipe.str = recipe[strName];
+      recipe.thumb = recipe[thumb];
+    });
+
+    setSearchData(data[path] === null ? [] : data[path]);
+  }, [
+    fetchData,
+    pageName,
+    radioOption,
+    searchInput,
+    setSearchData,
+    location.pathname,
+    history,
+  ]);
 
   return (
     <>
@@ -53,7 +89,7 @@ function SearchBar() {
           Search
         </Button>
       </InputGroup>
-      <InputGroup size="sm" onChange={ onChangeHandler }>
+      <InputGroup size="sm" onChange={ onChangeHandler } className="mb-3">
         <Form.Check
           inline
           type="radio"

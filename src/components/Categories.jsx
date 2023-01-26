@@ -23,6 +23,7 @@ export default function Categories() {
     const setCategoriesList = async () => {
       const categories = await fetchCategories(pageName());
       const path = location.pathname.replace('/', '');
+      if (!categories[path]) return;
       const FIVE = 5;
       setCategories(categories[path].slice(0, FIVE));
     };
