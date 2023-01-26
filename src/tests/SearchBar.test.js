@@ -1,4 +1,4 @@
-import { screen, act, fireEvent } from '@testing-library/react';
+import { screen, act, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
@@ -21,7 +21,7 @@ describe('Testa o componente SearchBar', () => {
   test('Se a endpoint correta é chamada de acordo com a opção selecionada', () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue([]),
+      json: jest.fn().mockResolvedValue({meals: []}),
     });
 
     const { history } = renderWithRouter(<App />);
@@ -42,10 +42,11 @@ describe('Testa o componente SearchBar', () => {
     });
     expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   });
+
   test('Se o alert aparece quando mais de uma letra for inserida com a opção first letter', () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue([]),
+      json: jest.fn().mockResolvedValue({meals: []}),
     });
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     const { history } = renderWithRouter(<App />);
@@ -76,7 +77,7 @@ describe('Testa o componente SearchBar', () => {
   test('Se a endpoint correta é chamada de acordo com a página', () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue([]),
+      json: jest.fn().mockResolvedValue({drinks: []}),
     });
 
     const { history } = renderWithRouter(<App />);
@@ -97,4 +98,32 @@ describe('Testa o componente SearchBar', () => {
     });
     expect(global.fetch).toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   });
+  test('Se redireciona para a página de detalhes do item se houver somente um item na lista', () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue({drinks: [{idDrink: '345'}]}),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/drinks');
+    });
+    const searchBtn = screen.getByTestId('search-top-btn');
+    act(() => {
+      userEvent.click(searchBtn);
+    });
+    const nameRadio = screen.getByTestId('name-search-radio');
+    act(() => {
+      userEvent.click(nameRadio);
+    });
+    const execSearchBtn = screen.getByTestId('exec-search-btn');
+    act(() => {
+      userEvent.click(execSearchBtn);
+    });
+    expect(global.fetch).toHaveBeenCalled();
+    waitFor(() => {
+      expect(history.location.pathname).toBe('/drinks/345');
+    });
+  });
+
 });

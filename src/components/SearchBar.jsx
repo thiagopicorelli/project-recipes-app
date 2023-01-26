@@ -1,12 +1,13 @@
 import { React, useContext, useState, useCallback } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 
 function SearchBar() {
   const [radioOption, setRadioOption] = useState('ingredient');
   const [searchInput, setSearchInput] = useState('');
   const location = useLocation();
+  const history = useHistory();
   const { fetchData, setSearchData } = useContext(AppContext);
 
   const onChangeHandler = useCallback(({ target: { value } }) => {
@@ -34,6 +35,11 @@ function SearchBar() {
     const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
 
     setSearchData(data[path]);
+
+    const idName = path === 'meals' ? 'idMeal' : 'idDrink';
+    if (data[path].length === 1) {
+      history.push(`/${path}/${data[path][0][idName]}`);
+    }
   }, [fetchData, pageName, radioOption, searchInput, setSearchData, location.pathname]);
 
   return (
