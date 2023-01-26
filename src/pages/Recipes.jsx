@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
+import React, { useCallback, useContext } from 'react';
+import { Card, Container, Stack } from 'react-bootstrap';
 import { AppContext } from '../context/AppProvider';
 import { useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
@@ -23,7 +23,12 @@ function Recipes() {
   }, []);
 
   const recipeCard = useCallback((index, title, img) => (
-    <Card key={ index } data-testid={ `${index}-recipe-card` }>
+    <Card
+      key={ index }
+      data-testid={ `${index}-recipe-card` }
+      bg="light"
+      text="dark"
+    >
       <Card.Img
         variant="top"
         data-testid={ `${index}-card-img` }
@@ -48,11 +53,18 @@ function Recipes() {
   ), [searchData, recipeCard]);
 
   return (
-    <div>
-      Recipes
-      { recipeList() }
+    <>
+      <Container>
+        <h1 className="mb-3">Recipes</h1>
+        <Stack
+          direction="vertical"
+          gap={ 3 }
+        >
+          { recipeList() }
+        </Stack>
+      </Container>
       <Footer />
-    </div>
+    </>
   );
 }
 

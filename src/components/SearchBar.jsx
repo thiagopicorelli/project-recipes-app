@@ -45,8 +45,16 @@ function SearchBar() {
 
     const cleanData = cleanDataAttributes(data, path);
 
-    setSearchData(cleanData[path] === null ? [] : data[path]);
-  }, [fetchData, pageName, radioOption, searchInput, setSearchData, location.pathname]);
+    setSearchData(data[path] === null ? [] : data[path]);
+  }, [
+    fetchData,
+    pageName,
+    radioOption,
+    searchInput,
+    setSearchData,
+    location.pathname,
+    history,
+  ]);
 
   return (
     <>
@@ -65,7 +73,7 @@ function SearchBar() {
           Search
         </Button>
       </InputGroup>
-      <InputGroup size="sm" onChange={ onChangeHandler }>
+      <InputGroup size="sm" onChange={ onChangeHandler } className="mb-3">
         <Form.Check
           inline
           type="radio"
