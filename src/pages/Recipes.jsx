@@ -39,9 +39,7 @@ function Recipes() {
 
   return (
     <>
-      <Container>
-        <Categories />
-      </Container>
+      <Categories />
       <Container>
         <h1 className="mb-3">Recipes</h1>
         <Stack
