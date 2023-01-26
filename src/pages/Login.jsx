@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, Row } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthProvider';
 
@@ -18,21 +17,21 @@ function Login({ history }) {
 
   useEffect(() => {
     validateBtn(loginData);
-  }, [loginData]);
+  }, [loginData, validateBtn]);
 
   // useEffect(() => { console.log(test.current.value); }, [test]);
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     saveToLocalStorage(loginData.email);
     history.push('/meals');
-  };
+  }, [history, saveToLocalStorage, loginData.email]);
 
-  const handleChange = ({ target: { value, name } }) => {
+  const handleChange = useCallback(({ target: { value, name } }) => {
     setLoginData({
       ...loginData,
       [name]: value,
     });
-  };
+  }, [loginData]);
 
   return (
     <Container>
