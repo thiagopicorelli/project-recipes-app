@@ -8,7 +8,6 @@ function Profile({ history }) {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
-    // if (!localStorage.user) return;
     const emailStorage = JSON.parse(localStorage.user).email;
     setEmail(emailStorage);
   }, []);
