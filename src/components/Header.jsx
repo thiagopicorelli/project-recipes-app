@@ -1,48 +1,19 @@
 import { React, useEffect, useState } from 'react';
 import { Container, Navbar, Nav, Button, Collapse } from 'react-bootstrap';
-import { useLocation, Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import useHeader from '../hooks/useHeader';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 
 function Header() {
-  const location = useLocation();
-  const [visible, setVisible] = useState(true);
-  const [searchVisible, setSearchVisible] = useState(true);
-  const [pageTitle, setTitle] = useState('');
   const [inputVisible, setInputVisible] = useState(false);
+  const location = useLocation();
+  const { visible, searchVisible, pageTitle, getHeaderInfo } = useHeader();
 
   useEffect(() => {
-    switch (location.pathname) {
-    case '/meals':
-      setVisible(true);
-      setSearchVisible(true);
-      setTitle('Meals');
-      break;
-    case '/drinks':
-      setVisible(true);
-      setSearchVisible(true);
-      setTitle('Drinks');
-      break;
-    case '/profile':
-      setVisible(true);
-      setSearchVisible(false);
-      setTitle('Profile');
-      break;
-    case '/done-recipes':
-      setVisible(true);
-      setSearchVisible(false);
-      setTitle('Done Recipes');
-      break;
-    case '/favorite-recipes':
-      setVisible(true);
-      setSearchVisible(false);
-      setTitle('Favorite Recipes');
-      break;
-    default:
-      setVisible(false);
-    }
-  }, [location]);
+    getHeaderInfo(location);
+  }, [location, getHeaderInfo]);
 
   return (
     <>
