@@ -1,11 +1,33 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Card, Container, Stack } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 import Footer from '../components/Footer';
 import Categories from '../components/Categories';
+import cleanDataAttributes from '../helper/cleanDataAttributes';
 
 function Recipes() {
-  const { searchData } = useContext(AppContext);
+  const { fetchData, searchData, setSearchData } = useContext(AppContext);
+  const location = useLocation();
+
+  const pageName = useCallback(() => {
+    switch (location.pathname) {
+    case '/meals':
+      return 'meal';
+    default: // /drinks
+      return 'cocktail';
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    async function setDefaultRecipes() {
+      const data = await fetchData(pageName(), 'name', '');
+      const path = location.pathname.replace('/', '');
+      const cleanData = cleanDataAttributes(data, path);
+      setSearchData(cleanData[path]);
+    }
+    setDefaultRecipes();
+  }, []);
 
   const recipeCard = useCallback((index, title, img) => (
     <Card
