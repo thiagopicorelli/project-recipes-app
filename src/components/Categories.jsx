@@ -13,10 +13,8 @@ export default function Categories() {
     switch (location.pathname) {
     case '/drinks':
       return 'cocktail';
-    case '/meals':
-      return 'meal';
     default:
-      return '';
+      return 'meal';
     }
   }, [location.pathname]);
 
