@@ -4,6 +4,7 @@ export default function useFetch() {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAPI = async (url) => {
+    console.log(url)
     const response = await fetch(url);
     const json = await response.json();
     return json;
@@ -23,6 +24,9 @@ export default function useFetch() {
       break;
     case 'first-letter':
       url = `${urlType}search.php?f=${input}`;
+      break;
+    case 'category':
+      url = `${urlType}filter.php?c=${input}`;
       break;
     default:
       url = '';

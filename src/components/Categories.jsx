@@ -2,9 +2,10 @@ import React, { useContext, useCallback, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Container } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
+import cleanDataAttributes from '../helper/cleanDataAttributes';
 
 export default function Categories() {
-  const { fetchCategories } = useContext(AppContext);
+  const { fetchCategories, fetchData, setSearchData } = useContext(AppContext);
   const [categoriesList, setCategories] = useState([]);
   const location = useLocation();
 
@@ -19,13 +20,28 @@ export default function Categories() {
     }
   }, [location.pathname]);
 
+  const onClickHandler = useCallback(async ({ target: { value } }) => {
+    const strCategory = value;
+    let data;
+    if (strCategory === 'All') {
+      data = await fetchData(pageName(), 'name', '');
+    } else {
+      data = await fetchData(pageName(), 'category', strCategory);
+    }
+    const path = location.pathname.replace('/', '');
+    const cleanData = cleanDataAttributes(data, path);
+    setSearchData(cleanData[path]);
+  }, [pageName]);
+
   useEffect(() => {
     const setCategoriesList = async () => {
       const categories = await fetchCategories(pageName());
       const path = location.pathname.replace('/', '');
       if (!categories[path]) return;
-      const FIVE = 5;
-      setCategories(categories[path].slice(0, FIVE));
+      const FIVE = 6;
+      const categoriesNew = [...categories[path]];
+      categoriesNew.splice(0, 0, { strCategory: 'All' });
+      setCategories(categoriesNew.slice(0, FIVE));
     };
     setCategoriesList();
   }, [fetchCategories, pageName, location]);
@@ -44,6 +60,8 @@ export default function Categories() {
               variant="outline-dark"
               data-testid={ `${strCategory}-category-filter` }
               className="small-text"
+              onClick={ (event) => { onClickHandler(event); } }
+              value={ strCategory }
             >
               {strCategory}
             </Button>

@@ -27,7 +27,7 @@ function Recipes() {
       setSearchData(cleanData[path]);
     }
     setDefaultRecipes();
-  }, []);
+  }, [pageName]);
 
   const recipeCard = useCallback((index, title, img) => (
     <Card
