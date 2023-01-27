@@ -45,7 +45,7 @@ function SearchBar() {
 
     const cleanData = cleanDataAttributes(data, path);
 
-    setSearchData(data[path] === null ? [] : data[path]);
+    setSearchData(cleanData[path]);
   }, [
     fetchData,
     pageName,

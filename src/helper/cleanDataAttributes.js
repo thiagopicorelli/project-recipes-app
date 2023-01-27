@@ -13,6 +13,11 @@ export default function cleanDataAttributes(data, path) {
     thumb = 'strDrinkThumb';
   }
 
+  if (data[path] === null) {
+    data[path] = [];
+    return data;
+  }
+
   data[path].forEach((recipe) => {
     recipe.id = recipe[idName];
     recipe.str = recipe[strName];

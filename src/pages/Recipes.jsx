@@ -1,7 +1,7 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Card, Container, Stack } from 'react-bootstrap';
-import { AppContext } from '../context/AppProvider';
 import { useLocation } from 'react-router-dom';
+import { AppContext } from '../context/AppProvider';
 import Footer from '../components/Footer';
 import cleanDataAttributes from '../helper/cleanDataAttributes';
 
@@ -18,8 +18,11 @@ function Recipes() {
     }
   }, [location.pathname]);
 
-  useEffect(async () => {
-    const data = await fetchData(pageName(), radioOption, searchInput);
+  useEffect(() => {
+    async function setDefaultRecipes() {
+    
+    }
+    // const data = await fetchData(pageName(), radioOption, searchInput);
   }, []);
 
   const recipeCard = useCallback((index, title, img) => (
