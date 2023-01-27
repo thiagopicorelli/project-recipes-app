@@ -70,3 +70,11 @@
 .icon-light {
   filter: invert(100%) opacity(86%);
 }
+
+.text-align-center {
+  text-align: center;
+}
+
+.small-text {
+  font-size: 10px;
+}
