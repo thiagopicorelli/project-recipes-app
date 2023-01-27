@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Card, Stack } from 'react-bootstrap';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
@@ -38,18 +39,23 @@ export default function CardDoneRecipe() {
     >
       { doneRecipes && doneRecipes.map((recipe, index) => (
         <Card key={ recipe.id }>
-          <Card.Img
-            variant="top"
-            src={ recipe.image }
-            data-testid={ `${index}-horizontal-image` }
-            alt={ `image of ${recipe.name}` }
-          />
+          <Link to={ `/${recipe.type}s/${recipe.id}` }>
+            <Card.Img
+              variant="top"
+              src={ recipe.image }
+              data-testid={ `${index}-horizontal-image` }
+              alt={ `image of ${recipe.name}` }
+            />
+          </Link>
           <Card.Body>
-            <Card.Title
-              data-testid={ `${index}-horizontal-name` }
-            >
-              { recipe.name }
-            </Card.Title>
+            <Link to={ `/${recipe.type}s/${recipe.id}` }>
+              <Card.Title
+                data-testid={ `${index}-horizontal-name` }
+                className="text-decoration-none"
+              >
+                { recipe.name }
+              </Card.Title>
+            </Link>
             <Card.Subtitle
               className="mb-2 text-muted"
               data-testid={ `${index}-horizontal-top-text` }

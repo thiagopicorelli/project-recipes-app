@@ -22,7 +22,15 @@ export default function AppProvider({ children }) {
     setSearchData,
     doneRecipes,
     handleDoneRecipesFilter,
-  }), [fetchData, fetchCategories, isLoading, searchData, setSearchData]);
+  }), [
+    fetchData,
+    fetchCategories,
+    isLoading,
+    searchData,
+    setSearchData,
+    doneRecipes,
+    handleDoneRecipesFilter,
+  ]);
 
   return (
     <AppContext.Provider value={ values }>{ children }</AppContext.Provider>
