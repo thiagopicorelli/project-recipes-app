@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Stack } from 'react-bootstrap';
 import getDoneRecipes from '../helpers/getDoneRecipes';
+import shareIcon from '../images/shareIcon.svg';
 
 export default function CardDoneRecipe() {
   const [doneRecipes, setDoneRecipes] = useState([]);
@@ -31,7 +32,9 @@ export default function CardDoneRecipe() {
               className="mb-2 text-muted"
               data-testid={ `${index}-horizontal-top-text` }
             >
-              { recipe.category }
+              {recipe.nationality
+                ? `${recipe.nationality} - ${recipe.category}`
+                : `${recipe.category}`}
             </Card.Subtitle>
             <Card.Subtitle
               className="mb-2 text-muted"
@@ -57,9 +60,13 @@ export default function CardDoneRecipe() {
             <Button
               variant="info"
               size="sm"
-              data-testid={ `${index}-horizontal-share-btn` }
+
             >
-              Share
+              <img
+                src={ shareIcon }
+                alt="share"
+                data-testid={ `${index}-horizontal-share-btn` }
+              />
             </Button>
           </Card.Body>
         </Card>
