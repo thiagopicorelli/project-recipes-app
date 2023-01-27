@@ -1,20 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Button, Card, Stack } from 'react-bootstrap';
 import clipboardCopy from 'clipboard-copy';
-import getDoneRecipes from '../helpers/getDoneRecipes';
 import shareIcon from '../images/shareIcon.svg';
+import { AppContext } from '../context/AppProvider';
 
 export default function CardDoneRecipe() {
-  const [doneRecipes, setDoneRecipes] = useState([]);
   const [linkCopied, setLinkCopied] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const { doneRecipes } = useContext(AppContext);
 
   const THREE = 3;
   const ONE_SECOND = 1000;
-
-  useEffect(() => {
-    setDoneRecipes(getDoneRecipes());
-  }, []);
 
   useEffect(() => {
     let interval = null;
@@ -29,7 +25,6 @@ export default function CardDoneRecipe() {
   }, [linkCopied, seconds]);
 
   const handleClick = useCallback(({ target: { name, id } }) => {
-    console.log(name, id);
     const link = `http://localhost:3000/${name}s/${id}`;
     clipboardCopy(link);
     setLinkCopied(true);
