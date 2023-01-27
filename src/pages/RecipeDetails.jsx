@@ -1,133 +1,46 @@
-import React, { useCallback, useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Carousel, Container, Image, ListGroup, Row } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import copy from 'clipboard-copy';
-import useFetch from '../hooks/useFetch';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
+import useFavorite from '../hooks/useFavorite';
+import { RecipesContext } from '../context/RecipesProvider';
 
 const NUMBER_THIRTY_TWO = 32;
-const NUMBER_SIX = 6;
-const NUMBER_FOUR = 4;
 
 function RecipeDetails() {
   const history = useHistory();
   const location = useLocation();
   const id = location.pathname.split('/')[2];
   const page = location.pathname.split('/')[1];
-  const [recipe, setRecipe] = useState([{}]);
-  const { fetchRecipe, fetchData } = useFetch();
-  const [ingredients, setIngredients] = useState([]);
-  const [recommended, setRecommended] = useState([]);
-  const [done, setDone] = useState(false);
-  const [inProgress, setInProgress] = useState(false);
-  const [favorite, setFavorite] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  const pageName = useCallback(() => {
-    switch (page) {
-    case 'drinks':
-      return 'cocktail';
-    default:
-      return 'meal';
-    }
-  }, [page]);
-
-  useEffect(() => {
-    const getRecipe = async () => {
-      const data = await fetchRecipe(pageName(), id);
-
-      setRecipe(data[page]);
-    };
-    getRecipe();
-    // Está chamando infinitas vezes no RecipeDetails.jsx
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, id, pageName]);
+  const { toggleFavorite } = useFavorite();
+  const {
+    ingredients,
+    recommended,
+    getRecommendedRecipes,
+    done,
+    inProgress,
+    favorite,
+    setFavorite,
+    checkRecipeStatus,
+    recipe,
+    getRecipe,
+  } = useContext(RecipesContext);
 
   useEffect(() => {
-    const idRecipe = recipe[0][page === 'drinks' ? 'idDrink' : 'idMeal'];
+    getRecipe(page, id);
+    getRecommendedRecipes(page);
+  }, [page, id]);
 
-    const doneRecipes = JSON
-      .parse(localStorage.getItem('doneRecipes') ?? '[]');
-    const isDone = doneRecipes
-      .some(({ id: recipeId }) => recipeId === idRecipe);
-
-    setDone(isDone);
-
-    const inProgressRecipes = JSON
-      .parse(localStorage.getItem('inProgressRecipes') ?? '{}');
-    const isInProgress = Object.values(inProgressRecipes)
-      .some((type) => Object.keys(type)
-        .some((recipeId) => recipeId === idRecipe));
-
-    setInProgress(isInProgress);
-
-    const favoriteRecipes = JSON
-      .parse(localStorage.getItem('favoriteRecipes') ?? '[]');
-    const isFavorite = favoriteRecipes
-      .some(({ id: recipeId }) => recipeId === idRecipe);
-
-    setFavorite(isFavorite);
+  useEffect(() => {
+    checkRecipeStatus();
   }, [recipe]);
 
-  useEffect(() => {
-    const a = async () => {
-      const options = ['name', ''];
-      let key;
-
-      switch (page) {
-      case 'drinks':
-        options.unshift('meal');
-        key = 'meals';
-        break;
-      default:
-
-        options.unshift('cocktail');
-        key = 'drinks';
-        break;
-      }
-
-      const data = (await fetchData(...options))[key];
-
-      const slicedData = data.slice(0, NUMBER_SIX)
-        .map((rec, index) => ({ ...rec, id: index }));
-
-      setRecommended([
-        slicedData.slice(0, 2),
-        slicedData.slice(2, NUMBER_FOUR),
-        slicedData.slice(NUMBER_FOUR, NUMBER_SIX),
-      ]);
-    };
-
-    a();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  useEffect(() => {
-    const ingredientsArray = () => {
-      const measure = Object.entries(recipe[0])
-        .filter((entry) => entry[0].includes('strMeasure'))
-        .filter((entry) => entry[1]);
-
-      const ingredient = Object.entries(recipe[0])
-        .filter((entry) => entry[0].includes('strIngredient'))
-        .filter((entry) => entry[1]);
-
-      return ingredient
-        .map((data, index) => ({
-          ingredient: data[1],
-          measure: measure[index][1],
-        }));
-    };
-    setIngredients(ingredientsArray());
-  }, [recipe]);
-
-  const urlToEmbedUrl = (url) => {
-    const a = url.slice(NUMBER_THIRTY_TWO);
-
-    return `https://www.youtube.com/embed/${a}`;
-  };
+  const urlToEmbedUrl = (url) => `https://www.youtube.com/embed/${url.slice(NUMBER_THIRTY_TWO)}`;
 
   const handleClick = useCallback(() => {
     history.push(`${location.pathname}/in-progress`);
@@ -135,37 +48,15 @@ function RecipeDetails() {
 
   const handleShare = useCallback(() => {
     copy(`http://localhost:3000${location.pathname}`);
+
     setCopied(true);
   }, [location]);
 
   const handleFavorite = useCallback(() => {
     setFavorite(!favorite);
 
-    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes') ?? '[]');
-    const { idMeal, idDrink,
-      strMeal, strDrink,
-      strMealThumb, strDrinkThumb,
-      strArea = '',
-      strCategory = '',
-      strAlcoholic = '',
-    } = recipe[0];
-
-    if (!favoriteRecipes.some(({ id: recipeId }) => recipeId === id)) {
-      localStorage.setItem('favoriteRecipes', JSON.stringify([...favoriteRecipes, {
-        id: idMeal || idDrink,
-        type: idMeal ? 'meal' : 'drink',
-        nationality: strArea,
-        category: strCategory,
-        alcoholicOrNot: strAlcoholic,
-        name: strMeal || strDrink,
-        image: strMealThumb || strDrinkThumb,
-      }]));
-    } else {
-      localStorage.setItem('favoriteRecipes', JSON.stringify(
-        favoriteRecipes.filter(({ id: recipeId }) => recipeId !== (idMeal || idDrink)),
-      ));
-    }
-  }, [favorite, recipe]);
+    toggleFavorite(recipe[0]);
+  }, [favorite, recipe, toggleFavorite]);
 
   return (
     <>
