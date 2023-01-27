@@ -1,4 +1,4 @@
-import { screen, act, fireEvent, waitFor } from '@testing-library/react';
+import { screen, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
@@ -101,7 +101,7 @@ describe('Testa o componente SearchBar', () => {
     });
     expect(global.fetch).toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
   });
-  test('Se redireciona para a página de detalhes do item se houver somente um item na lista', () => {
+  test('Se redireciona para a página de detalhes do item se houver somente um item na lista', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue({ drinks: [{ idDrink: '345' }] }),
@@ -124,17 +124,18 @@ describe('Testa o componente SearchBar', () => {
       userEvent.click(execSearchBtn);
     });
     expect(global.fetch).toHaveBeenCalled();
-    waitFor(() => {
-      expect(history.location.pathname).toBe('/drinks/345');
-    });
+
+    await new Promise((res) => { setTimeout(res, 100); });
+    expect(history.location.pathname).toBe('/drinks/345');
   });
 
-  test('Se o alert aparece quando não há elementos retornados pelo fetch', () => {
+  test('Se o alert aparece quando não há elementos retornados pelo fetch', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue({ meals: null }),
     });
     jest.spyOn(window, 'alert').mockImplementation(() => {});
+
     const { history } = renderWithRouter(<App />);
     act(() => {
       history.push('/meals');
@@ -143,16 +144,12 @@ describe('Testa o componente SearchBar', () => {
     act(() => {
       userEvent.click(searchBtn);
     });
-    const firstLetterRadio = screen.getByTestId('first-letter-search-radio');
-    act(() => {
-      userEvent.click(firstLetterRadio);
-    });
     const execSearchBtn = screen.getByTestId(execSearchButton);
     act(() => {
       userEvent.click(execSearchBtn);
     });
-    waitFor(() => {
-      expect(window.alert).toHaveBeenCalled();
-    });
+
+    await new Promise((res) => { setTimeout(res, 100); });
+    expect(window.alert).toHaveBeenCalled();
   });
 });

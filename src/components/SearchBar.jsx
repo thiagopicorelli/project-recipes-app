@@ -34,12 +34,9 @@ function SearchBar() {
     const idName = path === 'meals' ? 'idMeal' : 'idDrink';
     const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
 
-    if (data[path] === null) {
+    if (data[path] === null || data[path].length === 0) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
-      setSearchData([]);
-      return;
-    }
-    if (data[path].length === 1) {
+    } else if (data[path].length === 1) {
       history.push(`/${path}/${data[path][0][idName]}`);
     }
 

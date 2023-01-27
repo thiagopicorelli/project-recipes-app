@@ -21,9 +21,12 @@ function Recipes() {
 
   useEffect(() => {
     async function setDefaultRecipes() {
-    
+      const data = await fetchData(pageName(), 'name', '');
+      const path = location.pathname.replace('/', '');
+      const cleanData = cleanDataAttributes(data, path);
+      setSearchData(cleanData[path]);
     }
-    // const data = await fetchData(pageName(), radioOption, searchInput);
+    setDefaultRecipes();
   }, []);
 
   const recipeCard = useCallback((index, title, img) => (
