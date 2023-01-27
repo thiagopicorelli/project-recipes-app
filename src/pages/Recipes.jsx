@@ -3,6 +3,7 @@ import { Card, Container, Stack } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 import Footer from '../components/Footer';
+import Categories from '../components/Categories';
 import cleanDataAttributes from '../helper/cleanDataAttributes';
 
 function Recipes() {
@@ -57,6 +58,7 @@ function Recipes() {
 
   return (
     <>
+      <Categories />
       <Container>
         <h1 className="mb-3">Recipes</h1>
         <Stack

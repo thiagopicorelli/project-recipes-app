@@ -58,7 +58,7 @@ function SearchBar() {
 
   return (
     <>
-      <InputGroup size="sm">
+      <InputGroup size="sm mb-1">
         <Form.Control
           data-testid="search-input"
           value={ searchInput }

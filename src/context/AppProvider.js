@@ -4,14 +4,15 @@ import useFetch from '../hooks/useFetch';
 
 export default function AppProvider({ children }) {
   const [searchData, setSearchData] = useState([]);
-  const { fetchData, isLoading } = useFetch();
+  const { fetchData, fetchCategories, isLoading } = useFetch();
 
   const values = useMemo(() => ({
     fetchData,
+    fetchCategories,
     isLoading,
     searchData,
     setSearchData,
-  }), [fetchData, isLoading, searchData, setSearchData]);
+  }), [fetchData, fetchCategories, isLoading, searchData, setSearchData]);
 
   return (
     <AppContext.Provider value={ values }>{ children }</AppContext.Provider>
