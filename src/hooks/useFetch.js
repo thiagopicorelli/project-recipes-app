@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 export default function useFetch() {
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState(null);
 
   const fetchData = async (pageName, radioOption, input) => {
     setIsLoading(true);
@@ -28,8 +29,29 @@ export default function useFetch() {
     return json;
   };
 
+  const fetchRecipe = async (pageName, id) => {
+    try {
+      setIsLoading(true);
+
+      const url = `https://www.the${pageName}db.com/api/json/v1/1/lookup.php?i=${id}`;
+
+      const response = await fetch(url);
+      const json = await response.json();
+
+      setIsLoading(false);
+
+      return json;
+    } catch (error) {
+      setErrors(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     fetchData,
+    fetchRecipe,
     isLoading,
+    errors,
   };
 }

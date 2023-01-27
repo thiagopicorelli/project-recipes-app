@@ -14,7 +14,9 @@ export default function AppProvider({ children }) {
   }), [fetchData, isLoading, searchData, setSearchData]);
 
   return (
-    <AppContext.Provider value={ values }>{ children }</AppContext.Provider>
+    <AppContext.Provider value={ values }>
+      { children }
+    </AppContext.Provider>
   );
 }
 
