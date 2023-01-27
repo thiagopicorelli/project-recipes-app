@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import { Card, Container, Stack } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 import Footer from '../components/Footer';
 import Categories from '../components/Categories';
@@ -9,6 +9,7 @@ import cleanDataAttributes from '../helper/cleanDataAttributes';
 function Recipes() {
   const { fetchData, searchData, setSearchData } = useContext(AppContext);
   const location = useLocation();
+  const history = useHistory();
 
   const pageName = useCallback(() => {
     switch (location.pathname) {
@@ -27,14 +28,15 @@ function Recipes() {
       setSearchData(cleanData[path]);
     }
     setDefaultRecipes();
-  }, []);
+  }, [pageName]);
 
-  const recipeCard = useCallback((index, title, img) => (
+  const recipeCard = useCallback((index, title, img, id) => (
     <Card
       key={ index }
       data-testid={ `${index}-recipe-card` }
       bg="light"
       text="dark"
+      onClick={ () => { history.push(`${location.pathname}/${id}`); } }
     >
       <Card.Img
         variant="top"
@@ -55,7 +57,7 @@ function Recipes() {
 
   const recipeList = useCallback(() => (
     searchData.slice(0, recipeListLength).map((recipe, index) => (
-      recipeCard(index, recipe.str, recipe.thumb)
+      recipeCard(index, recipe.str, recipe.thumb, recipe.id)
     ))
   ), [searchData, recipeCard]);
 

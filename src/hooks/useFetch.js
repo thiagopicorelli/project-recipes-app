@@ -24,6 +24,9 @@ export default function useFetch() {
     case 'first-letter':
       url = `${urlType}search.php?f=${input}`;
       break;
+    case 'category':
+      url = `${urlType}filter.php?c=${input}`;
+      break;
     default:
       url = '';
     }
