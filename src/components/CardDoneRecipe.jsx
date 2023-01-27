@@ -32,9 +32,9 @@ export default function CardDoneRecipe() {
               className="mb-2 text-muted"
               data-testid={ `${index}-horizontal-top-text` }
             >
-              {recipe.nationality
-                ? `${recipe.nationality} - ${recipe.category}`
-                : `${recipe.category}`}
+              { recipe.nationality && `${recipe.nationality} - ` }
+              { recipe.alcoholicOrNot && `${recipe.alcoholicOrNot} - ` }
+              { recipe.category }
             </Card.Subtitle>
             <Card.Subtitle
               className="mb-2 text-muted"
