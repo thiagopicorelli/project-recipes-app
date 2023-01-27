@@ -29,10 +29,8 @@ function RecipeDetails() {
     switch (page) {
     case 'drinks':
       return 'cocktail';
-    case 'meals':
-      return 'meal';
     default:
-      return '';
+      return 'meal';
     }
   }, [page]);
 
@@ -83,11 +81,10 @@ function RecipeDetails() {
         options.unshift('meal');
         key = 'meals';
         break;
-      case 'meals':
+      default:
+
         options.unshift('cocktail');
         key = 'drinks';
-        break;
-      default:
         break;
       }
 
@@ -153,7 +150,7 @@ function RecipeDetails() {
       strAlcoholic = '',
     } = recipe[0];
 
-    if (!favorite) {
+    if (!favoriteRecipes.some(({ id: recipeId }) => recipeId === id)) {
       localStorage.setItem('favoriteRecipes', JSON.stringify([...favoriteRecipes, {
         id: idMeal || idDrink,
         type: idMeal ? 'meal' : 'drink',
