@@ -21,6 +21,7 @@ export default function CardDoneRecipe() {
             variant="top"
             src={ recipe.image }
             data-testid={ `${index}-horizontal-image` }
+            alt={ `image of ${recipe.name}` }
           />
           <Card.Body>
             <Card.Title
