@@ -8,7 +8,7 @@ import categoryMock from './mock/categoryMock';
 describe('Testa a pagina Categories', () => {
   afterEach(() => jest.clearAllMocks());
 
-  test('', async () => {
+  test('Se o fetch é chamado após o click no botao das categorias', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
       json: jest.fn().mockResolvedValue(categoryMock),
