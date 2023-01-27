@@ -6,6 +6,7 @@ export default function useFetch() {
   const fetchAPI = async (url) => {
     const response = await fetch(url);
     const json = await response.json();
+
     return json;
   };
   const [errors, setErrors] = useState(null);
@@ -30,6 +31,7 @@ export default function useFetch() {
     }
 
     setIsLoading(false);
+
     return fetchAPI(url);
   };
 

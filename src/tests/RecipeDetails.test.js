@@ -3,9 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from './helpers/renderWithRouter';
 
-import Meals from './mock/mockMeals.json';
-import Drinks from './mock/mockDrinks.json';
 import App from '../App';
+import oneMeal from '../../cypress/mocks/oneMeal';
+import drinks from '../../cypress/mocks/drinks';
 
 const MEALS_ROUTE = { initialEntries: ['/meals/52977'] };
 const DRINK_ROUTE = { initialEntries: ['/drinks/15997'] };
@@ -13,12 +13,14 @@ const FAVORITE_BTN = 'favorite-btn';
 
 describe('testa o Component RecipeDEtails/MealsDetails', () => {
   beforeEach(() => {
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve(Meals),
-    }));
+    jest.spyOn(global, 'fetch');
+    global.fetch
+      .mockResolvedValue({
+        json: jest.fn().mockResolvedValueOnce(oneMeal).mockResolvedValue(drinks),
+      });
   });
 
-  test.only('testa se o componente é renderizado corretamente', async () => {
+  test('testa se o componente é renderizado corretamente', async () => {
     renderWithRouter(<App />, MEALS_ROUTE);
     const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
     const recipeImg = await screen.findByTestId('recipe-photo');

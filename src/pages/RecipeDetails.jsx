@@ -37,6 +37,17 @@ function RecipeDetails() {
   }, [page]);
 
   useEffect(() => {
+    const getRecipe = async () => {
+      const data = await fetchRecipe(pageName(), id);
+
+      setRecipe(data[page]);
+    };
+    getRecipe();
+    // Está chamando infinitas vezes no RecipeDetails.jsx
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, id, pageName]);
+
+  useEffect(() => {
     const idRecipe = recipe[0][page === 'drinks' ? 'idDrink' : 'idMeal'];
 
     const doneRecipes = JSON
@@ -79,7 +90,9 @@ function RecipeDetails() {
       default:
         break;
       }
+
       const data = (await fetchData(...options))[key];
+
       const slicedData = data.slice(0, NUMBER_SIX)
         .map((rec, index) => ({ ...rec, id: index }));
 
@@ -93,17 +106,6 @@ function RecipeDetails() {
     a();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
-
-  useEffect(() => {
-    const getRecipe = async () => {
-      const data = await fetchRecipe(pageName(), id);
-      setRecipe(data[page]);
-    };
-
-    getRecipe();
-    // Está chamando infinitas vezes no RecipeDetails.jsx
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, id, pageName]);
 
   useEffect(() => {
     const ingredientsArray = () => {
