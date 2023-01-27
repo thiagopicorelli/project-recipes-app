@@ -8,6 +8,7 @@ export default function Categories() {
   const { fetchCategories, fetchData, setSearchData } = useContext(AppContext);
   const [categoriesList, setCategories] = useState([]);
   const location = useLocation();
+  const [selectedCategory, setCategory] = useState('');
 
   const pageName = useCallback(() => {
     switch (location.pathname) {
@@ -19,9 +20,10 @@ export default function Categories() {
   }, [location.pathname]);
 
   const onClickHandler = useCallback(async ({ target: { value } }) => {
-    const strCategory = value;
+    let strCategory = value;
     let data;
-    if (strCategory === 'All') {
+    if (strCategory === 'All' || strCategory === selectedCategory) {
+      strCategory = 'All';
       data = await fetchData(pageName(), 'name', '');
     } else {
       data = await fetchData(pageName(), 'category', strCategory);
@@ -29,7 +31,8 @@ export default function Categories() {
     const path = location.pathname.replace('/', '');
     const cleanData = cleanDataAttributes(data, path);
     setSearchData(cleanData[path]);
-  }, [pageName]);
+    setCategory(strCategory);
+  }, [pageName, selectedCategory]);
 
   useEffect(() => {
     const setCategoriesList = async () => {
