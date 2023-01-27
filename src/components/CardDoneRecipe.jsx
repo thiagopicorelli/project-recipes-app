@@ -48,24 +48,26 @@ export default function CardDoneRecipe() {
             />
           </Link>
           <Card.Body>
-            <Link to={ `/${recipe.type}s/${recipe.id}` }>
+            <Link
+              to={ `/${recipe.type}s/${recipe.id}` }
+              className="text-decoration-none"
+            >
               <Card.Title
                 data-testid={ `${index}-horizontal-name` }
-                className="text-decoration-none"
               >
                 { recipe.name }
               </Card.Title>
             </Link>
-            <Card.Subtitle
-              className="mb-2 text-muted"
+            <Card.Text
               data-testid={ `${index}-horizontal-top-text` }
+              className="mb-2"
             >
               { recipe.nationality && `${recipe.nationality} - ` }
               { recipe.alcoholicOrNot && `${recipe.alcoholicOrNot} - ` }
               { recipe.category }
-            </Card.Subtitle>
+            </Card.Text>
             <Card.Subtitle
-              className="mb-2 text-muted"
+              className="text-muted mb-1"
               data-testid={ `${index}-horizontal-done-date` }
             >
               { recipe.doneDate }
@@ -73,18 +75,18 @@ export default function CardDoneRecipe() {
             <Stack
               direction="horizontal"
               gap={ 1 }
-              className="mb-2"
+              className="mb-3"
             >
               {recipe.tags.map((tag) => (
-                <span
+                <Card.Subtitle
                   data-testid={ `${index}-${tag}-horizontal-tag` }
                   key={ tag }
+                  className="text-muted"
                 >
                   { tag }
-                </span>
+                </Card.Subtitle>
               ))}
             </Stack>
-
             <Button
               variant="info"
               size="sm"
@@ -101,7 +103,6 @@ export default function CardDoneRecipe() {
                     id={ recipe.id }
                   />
                 )}
-
             </Button>
           </Card.Body>
         </Card>

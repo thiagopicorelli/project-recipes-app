@@ -13,7 +13,6 @@ export default function useFilterRecipes() {
             .includes(type),
         ),
     );
-    console.log(filteredRecipesArr);
     return filteredRecipesArr;
   };
 
