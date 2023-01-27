@@ -78,3 +78,7 @@
 .small-text {
   font-size: 10px;
 }
+
+.text-decoration-none {
+  text-decoration: none;
+}

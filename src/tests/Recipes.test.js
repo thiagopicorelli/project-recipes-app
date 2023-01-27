@@ -54,6 +54,28 @@ describe('Testa o componente SearchBar', () => {
 
     expect(screen.getByTestId('0-card-name')).toHaveTextContent('drink');
   });
+  test('Testa se o usuário é redirecionado para a página de detalhes da receita', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockDrinks),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/drinks');
+    });
+
+    await new Promise((res) => { setTimeout(res, 1000); });
+
+    const recipeCard = screen.getByTestId('0-card-img');
+    act(() => {
+      userEvent.click(recipeCard);
+    });
+
+    await new Promise((res) => { setTimeout(res, 1000); });
+
+    expect(history.location.pathname).toEqual('/drinks/345');
+  });
 });
 
 describe('Teste da tela de receitas', () => {

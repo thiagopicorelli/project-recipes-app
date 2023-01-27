@@ -1,6 +1,7 @@
 import { React, useContext, useState, useCallback } from 'react';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { useLocation, useHistory } from 'react-router-dom';
+import cleanDataAttributes from '../helper/cleanDataAttributes';
 import { AppContext } from '../context/AppProvider';
 
 function SearchBar() {
@@ -30,38 +31,18 @@ function SearchBar() {
     }
 
     const path = location.pathname.replace('/', '');
+    const idName = path === 'meals' ? 'idMeal' : 'idDrink';
     const data = await fetchData(pageName(), radioOption, searchInput); // { meals: [...]}
 
-    let idName = '';
-    let strName = '';
-    let thumb = '';
-
-    if (path === 'meals') {
-      idName = 'idMeal';
-      strName = 'strMeal';
-      thumb = 'strMealThumb';
-    } else {
-      idName = 'idDrink';
-      strName = 'strDrink';
-      thumb = 'strDrinkThumb';
-    }
-
-    if (data[path] === null) {
+    if (data[path] === null || data[path].length === 0) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
-      setSearchData([]);
-      return;
-    }
-    if (data[path].length === 1) {
+    } else if (data[path].length === 1) {
       history.push(`/${path}/${data[path][0][idName]}`);
     }
 
-    data[path].forEach((recipe) => {
-      recipe.id = recipe[idName];
-      recipe.str = recipe[strName];
-      recipe.thumb = recipe[thumb];
-    });
+    const cleanData = cleanDataAttributes(data, path);
 
-    setSearchData(data[path] === null ? [] : data[path]);
+    setSearchData(cleanData[path]);
   }, [
     fetchData,
     pageName,

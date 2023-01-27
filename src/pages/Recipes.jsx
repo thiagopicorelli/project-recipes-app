@@ -1,18 +1,42 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Card, Container, Stack } from 'react-bootstrap';
+import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
 import Footer from '../components/Footer';
 import Categories from '../components/Categories';
+import cleanDataAttributes from '../helper/cleanDataAttributes';
 
 function Recipes() {
-  const { searchData } = useContext(AppContext);
+  const { fetchData, searchData, setSearchData } = useContext(AppContext);
+  const location = useLocation();
+  const history = useHistory();
 
-  const recipeCard = useCallback((index, title, img) => (
+  const pageName = useCallback(() => {
+    switch (location.pathname) {
+    case '/meals':
+      return 'meal';
+    default: // /drinks
+      return 'cocktail';
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    async function setDefaultRecipes() {
+      const data = await fetchData(pageName(), 'name', '');
+      const path = location.pathname.replace('/', '');
+      const cleanData = cleanDataAttributes(data, path);
+      setSearchData(cleanData[path]);
+    }
+    setDefaultRecipes();
+  }, [pageName]);
+
+  const recipeCard = useCallback((index, title, img, id) => (
     <Card
       key={ index }
       data-testid={ `${index}-recipe-card` }
       bg="light"
       text="dark"
+      onClick={ () => { history.push(`${location.pathname}/${id}`); } }
     >
       <Card.Img
         variant="top"
@@ -33,7 +57,7 @@ function Recipes() {
 
   const recipeList = useCallback(() => (
     searchData.slice(0, recipeListLength).map((recipe, index) => (
-      recipeCard(index, recipe.str, recipe.thumb)
+      recipeCard(index, recipe.str, recipe.thumb, recipe.id)
     ))
   ), [searchData, recipeCard]);
 
