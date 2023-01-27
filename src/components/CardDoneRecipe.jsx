@@ -1,13 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Card, Stack } from 'react-bootstrap';
+import clipboardCopy from 'clipboard-copy';
 import getDoneRecipes from '../helpers/getDoneRecipes';
 import shareIcon from '../images/shareIcon.svg';
 
 export default function CardDoneRecipe() {
   const [doneRecipes, setDoneRecipes] = useState([]);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+
+  const THREE = 3;
+  const ONE_SECOND = 1000;
 
   useEffect(() => {
     setDoneRecipes(getDoneRecipes());
+  }, []);
+
+  useEffect(() => {
+    let interval = null;
+    if (linkCopied && seconds === THREE) {
+      interval = setInterval(() => {
+        setSeconds((sec) => sec - 1);
+      }, ONE_SECOND);
+    } else if (linkCopied && seconds === 0) {
+      clearInterval(interval);
+      setLinkCopied(false);
+    }
+  }, [linkCopied, seconds]);
+
+  const handleClick = useCallback(({ target: { name, id } }) => {
+    console.log(name, id);
+    const link = `http://localhost:3000/${name}s/${id}`;
+    clipboardCopy(link);
+    setLinkCopied(true);
+    setSeconds(THREE);
   }, []);
 
   return (
@@ -61,13 +87,20 @@ export default function CardDoneRecipe() {
             <Button
               variant="info"
               size="sm"
-
+              onClick={ handleClick }
             >
-              <img
-                src={ shareIcon }
-                alt="share"
-                data-testid={ `${index}-horizontal-share-btn` }
-              />
+              {linkCopied
+                ? <span>Link copied!</span>
+                : (
+                  <img
+                    src={ shareIcon }
+                    alt="share"
+                    data-testid={ `${index}-horizontal-share-btn` }
+                    name={ recipe.type }
+                    id={ recipe.id }
+                  />
+                )}
+
             </Button>
           </Card.Body>
         </Card>
