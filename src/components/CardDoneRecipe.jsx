@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, ButtonGroup, Card, Col, Stack } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Stack } from 'react-bootstrap';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
