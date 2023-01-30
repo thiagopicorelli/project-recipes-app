@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Stack } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Col, Stack } from 'react-bootstrap';
 import clipboardCopy from 'clipboard-copy';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import { AppContext } from '../context/AppProvider';
 
 export default function CardDoneRecipe({ page }) {
   const [linkCopied, setLinkCopied] = useState(false);
   const [seconds, setSeconds] = useState(0);
-  const { doneRecipes, favRecipes } = useContext(AppContext);
+  const { doneRecipes, favRecipes, handleUnfavorite } = useContext(AppContext);
 
   const THREE = 3;
   const ONE_SECOND = 1000;
@@ -103,33 +102,39 @@ export default function CardDoneRecipe({ page }) {
                 </Card.Subtitle>
               ))}
             </Stack>
-            <Button
-              variant="info"
-              size="sm"
-              onClick={ handleClick }
-            >
-              {linkCopied
-                ? <span>Link copied!</span>
-                : (
-                  <img
-                    src={ shareIcon }
-                    alt="share"
-                    data-testid={ `${index}-horizontal-share-btn` }
-                    name={ recipe.type }
-                    id={ recipe.id }
-                  />
-                )}
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-            >
-              <img
-                src={ blackHeartIcon }
-                alt="Favorite icon"
-                data-testid={ `${index}-horizontal-favorite-btn` }
-              />
-            </Button>
+            <ButtonGroup size="sm">
+              <Button
+                variant="info"
+                onClick={ handleClick }
+              >
+                {linkCopied
+                  ? <span>Link copied!</span>
+                  : (
+                    <img
+                      src={ shareIcon }
+                      alt="share"
+                      data-testid={ `${index}-horizontal-share-btn` }
+                      name={ recipe.type }
+                      id={ recipe.id }
+                    />
+                  )}
+              </Button>
+              { page === 'fav'
+            && (
+              <Button
+                variant="primary"
+                onClick={ handleUnfavorite }
+              >
+                <img
+                  src={ blackHeartIcon }
+                  alt="Favorite icon"
+                  data-testid={ `${index}-horizontal-favorite-btn` }
+                  id={ recipe.id }
+                />
+              </Button>
+            )}
+            </ButtonGroup>
+
           </Card.Body>
         </Card>
       ))}

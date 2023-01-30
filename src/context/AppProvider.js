@@ -19,6 +19,13 @@ export default function AppProvider({ children }) {
     setFavRecipes(filterRecipes(name, 'fav'));
   }, [filterRecipes]);
 
+  const handleUnfavorite = useCallback(({ target: { id } }) => {
+    const savedRecipes = JSON.parse(localStorage.favoriteRecipes);
+    const newFavorites = savedRecipes.filter((recipe) => recipe.id !== id);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newFavorites));
+    setFavRecipes(filterRecipes('all', 'fav'));
+  }, [filterRecipes]);
+
   const values = useMemo(() => ({
     fetchData,
     fetchCategories,
@@ -29,6 +36,7 @@ export default function AppProvider({ children }) {
     handleDoneRecipesFilter,
     handleFavRecipesFilter,
     favRecipes,
+    handleUnfavorite,
   }), [
     fetchData,
     fetchCategories,
@@ -39,6 +47,7 @@ export default function AppProvider({ children }) {
     favRecipes,
     handleDoneRecipesFilter,
     handleFavRecipesFilter,
+    handleUnfavorite,
   ]);
 
   return (
