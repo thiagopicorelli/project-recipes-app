@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, Stack } from 'react-bootstrap';
@@ -8,26 +7,13 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import { AppContext } from '../context/AppProvider';
 
-export default function CardDoneRecipe({ page }) {
+export default function CardFavRecipe() {
   const [linkCopied, setLinkCopied] = useState(false);
   const [seconds, setSeconds] = useState(0);
-  const { doneRecipes, favRecipes } = useContext(AppContext);
+  const { favRecipes } = useContext(AppContext);
 
   const THREE = 3;
   const ONE_SECOND = 1000;
-
-  let recipeArr;
-
-  switch (page) {
-  case 'done':
-    recipeArr = doneRecipes;
-    break;
-  case 'fav':
-    recipeArr = favRecipes;
-    break;
-  default:
-    break;
-  }
 
   useEffect(() => {
     let interval = null;
@@ -53,7 +39,7 @@ export default function CardDoneRecipe({ page }) {
       direction="vertical"
       gap={ 3 }
     >
-      { recipeArr && recipeArr.map((recipe, index) => (
+      { favRecipes && favRecipes.map((recipe, index) => (
         <Card key={ recipe.id }>
           <Link to={ `/${recipe.type}s/${recipe.id}` }>
             <Card.Img
@@ -78,31 +64,9 @@ export default function CardDoneRecipe({ page }) {
               data-testid={ `${index}-horizontal-top-text` }
               className="mb-2"
             >
-              { recipe.nationality && `${recipe.nationality} - ` }
               { recipe.alcoholicOrNot && `${recipe.alcoholicOrNot} - ` }
               { recipe.category }
             </Card.Text>
-            <Card.Subtitle
-              className="text-muted mb-1"
-              data-testid={ `${index}-horizontal-done-date` }
-            >
-              { recipe.doneDate }
-            </Card.Subtitle>
-            <Stack
-              direction="horizontal"
-              gap={ 1 }
-              className="mb-3"
-            >
-              { recipe.tags && recipe.tags.map((tag) => (
-                <Card.Subtitle
-                  data-testid={ `${index}-${tag}-horizontal-tag` }
-                  key={ tag }
-                  className="text-muted"
-                >
-                  { tag }
-                </Card.Subtitle>
-              ))}
-            </Stack>
             <Button
               variant="info"
               size="sm"
@@ -137,7 +101,3 @@ export default function CardDoneRecipe({ page }) {
     </Stack>
   );
 }
-
-CardDoneRecipe.propTypes = {
-  page: PropTypes.string.isRequired,
-};

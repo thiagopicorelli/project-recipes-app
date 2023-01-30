@@ -8,10 +8,15 @@ export default function AppProvider({ children }) {
   const { fetchData, fetchCategories, isLoading } = useFetch();
 
   const { filterRecipes } = useFilterRecipes();
-  const [doneRecipes, setDoneRecipes] = useState(filterRecipes('all'));
+  const [doneRecipes, setDoneRecipes] = useState(filterRecipes('all', 'done'));
+  const [favRecipes, setFavRecipes] = useState(filterRecipes('all', 'fav'));
 
   const handleDoneRecipesFilter = useCallback(({ target: { name } }) => {
-    setDoneRecipes(filterRecipes(name));
+    setDoneRecipes(filterRecipes(name, 'done'));
+  }, [filterRecipes]);
+
+  const handleFavRecipesFilter = useCallback(({ target: { name } }) => {
+    setFavRecipes(filterRecipes(name, 'fav'));
   }, [filterRecipes]);
 
   const values = useMemo(() => ({
@@ -22,6 +27,8 @@ export default function AppProvider({ children }) {
     setSearchData,
     doneRecipes,
     handleDoneRecipesFilter,
+    handleFavRecipesFilter,
+    favRecipes,
   }), [
     fetchData,
     fetchCategories,
@@ -29,7 +36,9 @@ export default function AppProvider({ children }) {
     searchData,
     setSearchData,
     doneRecipes,
+    favRecipes,
     handleDoneRecipesFilter,
+    handleFavRecipesFilter,
   ]);
 
   return (
