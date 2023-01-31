@@ -33,7 +33,7 @@ function RecipeInProgress() {
   useEffect(() => {
     getRecipe(page, id);
     getRecommendedRecipes(page);
-  }, [page, id, getRecipe, getRecommendedRecipes]);
+  }, [page, id, getRecipe]);
 
   useEffect(() => {
     checkRecipeStatus();
@@ -42,14 +42,14 @@ function RecipeInProgress() {
   const handleClick = useCallback(() => {
     localStorage.setItem('doneRecipes', JSON.stringify(recipe));
     history.push('/done-recipes');
-  }, [history, recipe]);
+  }, [history]);
 
   const handleShare = useCallback(() => {
     const link = history.location.pathname.replace('/in-progress', '');
     copy(`http://localhost:3000${link}`);
 
     setCopied(true);
-  }, [history.location.pathname]);
+  }, [history]);
 
   const handleFavorite = useCallback(() => {
     setFavorite(!favorite);
