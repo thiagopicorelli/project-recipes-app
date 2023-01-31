@@ -34,7 +34,7 @@ function RecipesProvider({ children }) {
 
       return ingredient.map((data, index) => ({
         ingredient: data[1],
-        measure: measure[index][1],
+        measure: measure[index] === undefined ? '' : measure[index][1],
         id: index,
         checked: false,
       }));
@@ -92,24 +92,6 @@ function RecipesProvider({ children }) {
 
     setInProgress(isInProgress);
   }, [idChecker, recipe]);
-
-  useEffect(() => {
-    const getValidIngredients = (str) => Object.entries(recipe[0])
-      .filter((entry) => entry[0].includes(str))
-      .filter((entry) => entry[1]);
-
-    const ingredientsArray = () => {
-      const measure = getValidIngredients('strMeasure');
-      const ingredient = getValidIngredients('strIngredient');
-
-      return ingredient.map((data, index) => ({
-        ingredient: data[1],
-        measure: measure[index] === undefined ? '' : measure[index][1],
-      }));
-    };
-
-    setIngredients(ingredientsArray());
-  }, [recipe]);
 
   useEffect(() => {
     const getRecommendedRecipes = async () => {
