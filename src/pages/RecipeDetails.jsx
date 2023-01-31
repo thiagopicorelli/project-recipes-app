@@ -47,7 +47,8 @@ function RecipeDetails() {
   }, [history, location]);
 
   const handleShare = useCallback(() => {
-    copy(`http://localhost:3000${location.pathname}`);
+    const itemDetailUrl = history.location.pathname.splice('/in-progress');
+    copy(`http://localhost:3000${itemDetailUrl}`);
 
     setCopied(true);
   }, [location]);
