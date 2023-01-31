@@ -22,8 +22,8 @@
 }
 
 .empty-checkbox input {
-  margin-right: 5px;
   border: solid green;
+  margin-right: 5px;
 }
 
 /*
