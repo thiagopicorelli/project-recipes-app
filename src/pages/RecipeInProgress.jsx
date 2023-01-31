@@ -33,29 +33,29 @@ function RecipeInProgress() {
   useEffect(() => {
     getRecipe(page, id);
     getRecommendedRecipes(page);
-  }, [page, id]);
+  }, [page, id, getRecipe, getRecommendedRecipes]);
 
   useEffect(() => {
     checkRecipeStatus();
-  }, [recipe]);
+  }, [recipe, checkRecipeStatus]);
 
   const handleClick = useCallback(() => {
     localStorage.setItem('doneRecipes', JSON.stringify(recipe));
     history.push('/done-recipes');
-  }, [history]);
+  }, [history, recipe]);
 
   const handleShare = useCallback(() => {
     const link = history.location.pathname.replace('/in-progress', '');
     copy(`http://localhost:3000${link}`);
 
     setCopied(true);
-  }, [location]);
+  }, [history.location.pathname]);
 
   const handleFavorite = useCallback(() => {
     setFavorite(!favorite);
 
     toggleFavorite(recipe[0]);
-  }, [favorite, recipe, toggleFavorite]);
+  }, [favorite, recipe, toggleFavorite, setFavorite]);
 
   const handleCheck = ((i) => {
     setIngredientCheck(i);
