@@ -62,6 +62,8 @@ function RecipeInProgress() {
     localStorage.setItem('inProgressRecipes', JSON.stringify(ingredientCheck));
   });
 
+  console.log(ingredientCheck);
+
   const buttonDesable = useCallback(() => {
     if (ingredientCheck.length === ingredients.length) {
       setBtndesable(false);
