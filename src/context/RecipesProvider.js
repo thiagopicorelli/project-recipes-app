@@ -59,7 +59,7 @@ function RecipesProvider({ children }) {
 
       return ingredient.map((data, index) => ({
         ingredient: data[1],
-        measure: measure[index][1],
+        measure: measure[index] === undefined ? '' : measure[index][1],
       }));
     };
 
