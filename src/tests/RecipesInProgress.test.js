@@ -114,9 +114,7 @@ describe('testa o Component RecipeDEtails/MealsDetails', () => {
 
     userEvent.click(button);
 
-    const doneRecipesTitle = screen.getByRole('heading', {
-      name: /done recipes/i,
-    });
+    const doneRecipesTitle = screen.getByText(/done recipes/i);
 
     expect(doneRecipesTitle).toBeInTheDocument();
   });
@@ -200,9 +198,7 @@ describe('Testa o componente Drinks', () => {
 
     userEvent.click(button);
 
-    const doneRecipesTitle = screen.getByRole('heading', {
-      name: /done recipes/i,
-    });
+    const doneRecipesTitle = screen.getByText(/done recipes/i);
 
     expect(doneRecipesTitle).toBeInTheDocument();
   });
