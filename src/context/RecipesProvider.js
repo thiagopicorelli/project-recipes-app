@@ -15,13 +15,58 @@ function RecipesProvider({ children }) {
   const [done, setDone] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [favorite, setFavorite] = useState(false);
+  const [page, setPage] = useState('');
+  const [id, setId] = useState('');
 
-  const getRecipe = useCallback(async (page, id) => {
-    const data = await fetchRecipe(page === 'drinks' ? 'cocktail' : 'meal', id);
-    console.log(data);
+  const getPageInfo = useCallback((pageId, pageName) => {
+    setId(pageId);
+    setPage(pageName);
+  }, []);
 
-    setRecipe(data[page === 'drinks' ? 'drinks' : 'meals']);
-  }, [fetchRecipe]);
+  useEffect(() => {
+    const getValidIngredients = (str) => Object.entries(recipe[0])
+      .filter((entry) => entry[0].includes(str))
+      .filter((entry) => entry[1]);
+
+    const ingredientsArray = () => {
+      const measure = getValidIngredients('strMeasure');
+      const ingredient = getValidIngredients('strIngredient');
+
+      return ingredient.map((data, index) => ({
+        ingredient: data[1],
+        measure: measure[index][1],
+        id: index,
+        checked: false,
+      }));
+    };
+    if (!page) return;
+
+    const a = JSON.parse(localStorage.getItem('inProgressRecipes') || '{}');
+    if (!a[page]) a[page] = {};
+
+    let newIngredients = ingredientsArray();
+
+    if (a[page][id]) {
+      newIngredients = newIngredients
+        .map((ingredient) => ({
+          ...ingredient,
+          checked: a[page][id]
+            .some((name) => name === ingredient.ingredient),
+        }));
+    }
+
+    setIngredients(newIngredients);
+  }, [id, page, recipe]);
+
+  useEffect(() => {
+    const getRecipe = async () => {
+      if (!page) return;
+      const data = await fetchRecipe(page === 'drinks' ? 'cocktail' : 'meal', id);
+
+      setRecipe(data[page === 'drinks' ? 'drinks' : 'meals']);
+    };
+    getRecipe();
+  }, [id, page]);
 
   const idChecker = useCallback((key, idRecipe) => {
     const response = JSON
@@ -66,34 +111,38 @@ function RecipesProvider({ children }) {
     setIngredients(ingredientsArray());
   }, [recipe]);
 
-  const getRecommendedRecipes = useCallback(async (page) => {
-    const options = [page === 'drinks' ? 'meal' : 'cocktail', 'name', ''];
-    const key = page === 'drinks' ? 'meals' : 'drinks';
+  useEffect(() => {
+    const getRecommendedRecipes = async () => {
+      if (!page) return;
+      const options = [page === 'drinks' ? 'meal' : 'cocktail', 'name', ''];
+      const key = page === 'drinks' ? 'meals' : 'drinks';
 
-    const data = (await fetchData(...options))[key];
-    const slicedData = data.slice(0, NUMBER_SIX)
-      .map((rec, index) => ({ ...rec, id: index }));
+      const data = (await fetchData(...options))[key];
+      const slicedData = data.slice(0, NUMBER_SIX)
+        .map((rec, index) => ({ ...rec, id: index }));
 
-    setRecommended([
-      slicedData.slice(0, 2),
-      slicedData.slice(2, NUMBER_FOUR),
-      slicedData.slice(NUMBER_FOUR, NUMBER_SIX),
-    ]);
-  }, [fetchData]);
+      setRecommended([
+        slicedData.slice(0, 2),
+        slicedData.slice(2, NUMBER_FOUR),
+        slicedData.slice(NUMBER_FOUR, NUMBER_SIX),
+      ]);
+    };
+    getRecommendedRecipes();
+  }, [page]);
 
   const value = useMemo(() => ({
     ingredients,
+    setIngredients,
     recommended,
-    getRecommendedRecipes,
     done,
     inProgress,
     favorite,
     setFavorite,
     checkRecipeStatus,
     recipe,
-    getRecipe,
-  }), [ingredients, recommended, getRecommendedRecipes,
-    done, inProgress, favorite, checkRecipeStatus, recipe, getRecipe]);
+    getPageInfo,
+  }), [ingredients, recommended, done, inProgress, favorite,
+    checkRecipeStatus, recipe, setIngredients, getPageInfo]);
 
   return (
     <RecipesContext.Provider value={ value }>

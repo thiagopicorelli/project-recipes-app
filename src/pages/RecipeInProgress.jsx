@@ -7,6 +7,7 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import useFavorite from '../hooks/useFavorite';
 import { RecipesContext } from '../context/RecipesProvider';
+import '../styles/Recipe.css';
 
 function RecipeInProgress() {
   const history = useHistory();
@@ -14,35 +15,58 @@ function RecipeInProgress() {
   const id = location.pathname.split('/')[2];
   const page = location.pathname.split('/')[1];
   const [copied, setCopied] = useState(false);
-  // const [recipeFinish, setRecipeFinish] = useState();
-  const [ingredientCheck, setIngredientCheck] = useState([]);
   const { toggleFavorite } = useFavorite();
-  const [btnDesable, setBtndesable] = useState(true);
-  // const [removeButtonFinish, setRemoveButtonFinish] = useState(false);
+  const [btnEnabled, setBtnEnabled] = useState(false);
 
   const {
-    getRecommendedRecipes,
     favorite,
     setFavorite,
     checkRecipeStatus,
     recipe,
-    getRecipe,
     ingredients,
+    setIngredients,
+    getPageInfo,
   } = useContext(RecipesContext);
 
   useEffect(() => {
-    getRecipe(page, id);
-    getRecommendedRecipes(page);
-  }, [page, id, getRecipe]);
+    getPageInfo(id, page);
+  }, [page, id, getPageInfo]);
 
   useEffect(() => {
     checkRecipeStatus();
   }, [recipe, checkRecipeStatus]);
 
+  const doneRecipeObjectBuild = useCallback(() => {
+    const {
+      strArea,
+      strCategory,
+      strAlcoholic,
+      strMeal,
+      strDrink,
+      strMealThumb,
+      strDrinkThumb,
+      strTags,
+    } = recipe[0];
+
+    return {
+      id,
+      type: page.slice(0, page.length - 1),
+      nationality: strArea || '',
+      category: strCategory || '',
+      alcoholicOrNot: strAlcoholic || '',
+      name: strMeal || strDrink,
+      image: strMealThumb || strDrinkThumb,
+      doneDate: new Date(),
+      tags: strTags ? strTags.split(',') : [],
+    };
+  }, [id, page, recipe]);
+
   const handleClick = useCallback(() => {
-    localStorage.setItem('doneRecipes', JSON.stringify(recipe));
+    const a = JSON.parse(localStorage.getItem('doneRecipes') || '[]');
+    localStorage.setItem('doneRecipes', JSON.stringify([...a, doneRecipeObjectBuild()]));
+
     history.push('/done-recipes');
-  }, [history]);
+  }, [doneRecipeObjectBuild, history]);
 
   const handleShare = useCallback(() => {
     const link = history.location.pathname.replace('/in-progress', '');
@@ -57,23 +81,35 @@ function RecipeInProgress() {
     toggleFavorite(recipe[0]);
   }, [favorite, recipe, toggleFavorite]);
 
-  const handleCheck = ((i) => {
-    setIngredientCheck(i);
-    localStorage.setItem('inProgressRecipes', JSON.stringify(ingredientCheck));
+  const setLocalStorage = (array) => {
+    const a = JSON.parse(localStorage.getItem('inProgressRecipes') || '{}');
+
+    if (!a[page]) a[page] = {};
+    a[page][id] = array
+      .filter(({ checked }) => checked)
+      .map(({ ingredient }) => ingredient);
+
+    localStorage.setItem('inProgressRecipes', JSON.stringify(a));
+  };
+
+  const handleCheck = ((index) => {
+    const newIngredients = ingredients.map((ingredient) => (ingredient.id === index
+      ? ({
+        ...ingredient,
+        checked: !ingredient.checked,
+      })
+      : ingredient));
+
+    setIngredients(newIngredients);
+
+    setLocalStorage(newIngredients);
   });
 
-  console.log(ingredientCheck);
+  useEffect(() => {
+    const ingredientsDone = ingredients.filter(({ checked }) => checked);
 
-  const buttonDesable = useCallback(() => {
-    if (ingredientCheck.length === ingredients.length) {
-      setBtndesable(false);
-    } else {
-      setBtndesable(true);
-    }
-  }, [ingredientCheck, ingredients]);
-
-  console.log(ingredientCheck);
-  console.log(buttonDesable);
+    setBtnEnabled(ingredientsDone.length === ingredients.length);
+  }, [ingredients]);
 
   return (
     <>
@@ -121,26 +157,35 @@ function RecipeInProgress() {
               />
             </Row>
             <Row>
-              <h3>Ingredients</h3>
-              <ListGroup as="ul">
-                { ingredients.map(({ ingredient, measure }, i) => (
+              <h3>
+                Ingredients
+              </h3>
+              <ListGroup
+                as="ul"
+              >
+                { ingredients.map((
+                  { ingredient, measure, id: ingIndex, checked },
+                ) => (
                   <ListGroup.Item
                     key={ `${ingredient}${measure}` }
-                    disabled
-                    data-testid={ `${i}-ingredient-step` }
+                    enabled="false"
+                    as="li"
                   >
                     <label
-                      htmlFor={ i }
-                      className={ ingredient.checked ? 'checkedBox' : 'empty-checkbox' }
+                      htmlFor={ ingIndex }
+                      data-testid={ `${ingIndex}-ingredient-step` }
+                      className={ checked
+                        ? 'text-decoration-dashed'
+                        : '' }
                     >
                       <input
                         type="checkbox"
-                        id={ i }
+                        id={ ingIndex }
                         name={ ingredient }
-                        onChange={ () => handleCheck(ingredient.checked) }
-                        checked={ ingredient.checked }
+                        onChange={ () => handleCheck(ingIndex) }
+                        checked={ checked }
                       />
-                      { `${ingredient} ${measure}` }
+                      { ` ${ingredient} ${measure}` }
                     </label>
                   </ListGroup.Item>
                 )) }
@@ -166,7 +211,7 @@ function RecipeInProgress() {
                 size="lg"
                 data-testid="finish-recipe-btn"
                 fixed="bottom"
-                disabled={ btnDesable }
+                disabled={ !btnEnabled }
                 onClick={ handleClick }
               >
                 Finalizar Receita
