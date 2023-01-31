@@ -27,15 +27,15 @@ function Recipes() {
       setSearchData(cleanData[path]);
     }
     setDefaultRecipes();
-  }, [pageName]);
+  }, [location.pathname, pageName, setSearchData]);
 
-  const recipeCard = useCallback((index, title, img, id) => (
+  const recipeCard = useCallback(({ index, str: title, thumb: img, id, idMeal }) => (
     <Card
       key={ index }
       data-testid={ `${index}-recipe-card` }
       bg="light"
       text="dark"
-      onClick={ () => { history.push(`${location.pathname}/${id}`); } }
+      onClick={ () => { history.push(`${idMeal ? 'meal' : 'drink'}s/${id}`); } }
     >
       <Card.Img
         variant="top"
@@ -50,13 +50,13 @@ function Recipes() {
         </Card.Title>
       </Card.Body>
     </Card>
-  ), []);
+  ), [history]);
 
   const recipeListLength = 12;
 
   const recipeList = useCallback(() => (
-    searchData.slice(0, recipeListLength).map((recipe, index) => (
-      recipeCard(index, recipe.str, recipe.thumb, recipe.id)
+    searchData.slice(0, recipeListLength).map(({ str, thumb, id, idMeal }, index) => (
+      recipeCard({ index, str, thumb, id, idMeal })
     ))
   ), [searchData, recipeCard]);
 
