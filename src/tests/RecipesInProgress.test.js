@@ -111,6 +111,14 @@ describe('testa o Component RecipeDEtails/MealsDetails', () => {
     });
 
     expect(button).not.toBeDisabled();
+
+    userEvent.click(button);
+
+    const doneRecipesTitle = screen.getByRole('heading', {
+      name: /done recipes/i,
+    });
+
+    expect(doneRecipesTitle).toBeInTheDocument();
   });
 });
 
@@ -189,5 +197,13 @@ describe('Testa o componente Drinks', () => {
     });
 
     expect(button).not.toBeDisabled();
+
+    userEvent.click(button);
+
+    const doneRecipesTitle = screen.getByRole('heading', {
+      name: /done recipes/i,
+    });
+
+    expect(doneRecipesTitle).toBeInTheDocument();
   });
 });
