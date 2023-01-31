@@ -15,6 +15,17 @@
   max-height: 80vh;
 }
 
+.checkedBox input {
+  border: solid red;
+  margin-right: 5px;
+  text-decoration: line-through solid black;
+}
+
+.empty-checkbox input {
+  margin-right: 5px;
+  border: solid green;
+}
+
 /*
 #iceLeft {
   animation: clink .8s infinite ease;
