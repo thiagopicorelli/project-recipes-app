@@ -17,9 +17,9 @@ function Header() {
 
   return (
     <>
-      <Navbar bg="primary" variant="dark" className="mb-2">
-        { visible
-        && (
+      { visible
+      && (
+        <Navbar bg="primary" variant="dark" className="mb-2">
           <Container>
             <Navbar.Brand data-testid="page-title">
               { pageTitle }
@@ -50,9 +50,8 @@ function Header() {
                 </Button>
               )}
           </Container>
-        )}
-
-      </Navbar>
+        </Navbar>
+      )}
       {/* {(inputVisible && visible) && (
         <Container
           className="mb-2"

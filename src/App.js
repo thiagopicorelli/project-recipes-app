@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import AuthProvider from './context/AuthProvider';
 import RecipesProvider from './context/RecipesProvider';
 
@@ -32,10 +33,10 @@ function App() {
             <Route exact path="/done-recipes" component={ DoneRecipes } />
             <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
           </Switch>
+          <Footer />
         </RecipesProvider>
       </AuthProvider>
     </AppProvider>
-
   );
 }
 

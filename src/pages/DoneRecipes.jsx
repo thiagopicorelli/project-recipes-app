@@ -4,8 +4,6 @@ import CardDoneRecipe from '../components/CardDoneRecipe';
 import { AppContext } from '../context/AppProvider';
 
 function DoneRecipes() {
-  // const { filterRecipes } = useFilterRecipes();
-  // const [doneRecipes, setDoneRecipes] = useState(filterRecipes('all'));
   const { handleDoneRecipesFilter } = useContext(AppContext);
 
   return (
@@ -41,7 +39,7 @@ function DoneRecipes() {
           </Button>
         </ButtonGroup>
       </Row>
-      <CardDoneRecipe />
+      <CardDoneRecipe page="done" />
     </Container>
   );
 }

@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import { Card, Container, Stack } from 'react-bootstrap';
 import { useLocation, useHistory } from 'react-router-dom';
 import { AppContext } from '../context/AppProvider';
-import Footer from '../components/Footer';
 import Categories from '../components/Categories';
 import cleanDataAttributes from '../helper/cleanDataAttributes';
 
@@ -64,7 +63,7 @@ function Recipes() {
   return (
     <>
       <Categories />
-      <Container>
+      <Container className="pb-5 mb-4">
         <h1 className="mb-3">Recipes</h1>
         <Stack
           direction="vertical"
@@ -73,7 +72,6 @@ function Recipes() {
           { recipeList() }
         </Stack>
       </Container>
-      <Footer />
     </>
   );
 }
