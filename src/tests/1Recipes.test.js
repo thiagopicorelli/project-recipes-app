@@ -5,6 +5,8 @@ import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
 import categoryMock from './mock/categoryMock';
 import oneDrink from '../../cypress/mocks/oneDrink';
+import oneMeal from '../../cypress/mocks/oneMeal';
+import drinks from '../../cypress/mocks/drinks';
 import meals from '../../cypress/mocks/meals';
 
 describe('Testa o componente SearchBar', () => {
@@ -79,6 +81,31 @@ describe('Testa o componente SearchBar', () => {
     await new Promise((res) => { setTimeout(res, 1000); });
 
     expect(history.location.pathname).toEqual('/drinks/178319');
+  });
+
+  test('Testa se o usuário é redirecionado para a página de detalhes da receita meals', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValueOnce(mockDrinks)
+        .mockResolvedValueOnce(oneMeal)
+        .mockResolvedValueOnce(oneMeal)
+        .mockResolvedValueOnce(oneMeal)
+        .mockResolvedValue(drinks),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+
+    const recipeCard = await screen.findByTestId('0-card-img');
+    act(() => {
+      userEvent.click(recipeCard);
+    });
+
+    await new Promise((res) => { setTimeout(res, 1000); });
+
+    expect(history.location.pathname).toEqual('/meals/52771');
   });
 });
 
