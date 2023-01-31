@@ -55,7 +55,7 @@ function RecipeInProgress() {
     setFavorite(!favorite);
 
     toggleFavorite(recipe[0]);
-  }, [favorite, recipe, toggleFavorite, setFavorite]);
+  }, [favorite, recipe, toggleFavorite]);
 
   const handleCheck = ((i) => {
     setIngredientCheck(i);
