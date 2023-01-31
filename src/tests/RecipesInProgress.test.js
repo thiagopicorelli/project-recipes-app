@@ -168,7 +168,7 @@ describe('Testa o componente Drinks', () => {
   });
 
   test('testa se é possível marcar ingredientes como concluídos e devem permanecer marcados entre reloads', async () => {
-     renderWithRouter(<App />, DRINK_ROUTE);
+    renderWithRouter(<App />, DRINK_ROUTE);
     let ingredientes;
     await waitFor(() => {
       ingredientes = screen.getAllByTestId(/-ingredient-step/i);
@@ -206,5 +206,4 @@ describe('Testa o componente Drinks', () => {
 
     expect(doneRecipesTitle).toBeInTheDocument();
   });
-
-  });
+});
