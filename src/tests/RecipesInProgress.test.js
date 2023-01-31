@@ -1,6 +1,6 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, act } from '@testing-library/react';
 import { renderWithRouter } from './helpers/renderWithRouter';
 
 import App from '../App';
@@ -13,6 +13,7 @@ import meals from '../../cypress/mocks/meals';
 const MEALS_ROUTE = { initialEntries: ['/meals/52771/in-progress'] };
 const DRINK_ROUTE = { initialEntries: ['/drinks/15997in-progress'] };
 const FAVORITE_BTN = 'favorite-btn';
+const BTN_FINISH = 'finish-recipe-btn';
 
 describe('testa o Component RecipeDEtails/MealsDetails', () => {
   beforeEach(() => {
@@ -33,7 +34,7 @@ describe('testa o Component RecipeDEtails/MealsDetails', () => {
   test('testa se o componente é renderizado corretamente', async () => {
     renderWithRouter(<App />, MEALS_ROUTE);
     const recipeImg = await screen.findByTestId('recipe-photo');
-
+    const btnFinish = screen.getByTestId(BTN_FINISH);
     const recipeTitle = screen.getByTestId('recipe-title');
     const buttonFavorites = screen.getByTestId(FAVORITE_BTN);
     const recipeCategory = screen.getByTestId('recipe-category');
@@ -44,7 +45,9 @@ describe('testa o Component RecipeDEtails/MealsDetails', () => {
     expect(buttonFavorites).toBeInTheDocument();
     expect(recipeCategory).toBeInTheDocument();
     expect(instructions).toBeInTheDocument();
+    expect(btnFinish).toBeInTheDocument();
   });
+
   test('testa o botao de compartilhar', async () => {
     renderWithRouter(<App />, MEALS_ROUTE);
     const buttonShare = await screen.findByTestId('share-btn');
@@ -54,27 +57,6 @@ describe('testa o Component RecipeDEtails/MealsDetails', () => {
     expect(linkCopied).toBeInTheDocument();
   });
 
-  test('Testa o botao iniciar receita', async () => {
-    localStorage.setItem('inProgressRecipes', '{"meals":{}}');
-
-    const { history } = renderWithRouter(
-      <App />,
-      MEALS_ROUTE,
-    );
-    const startRecipeBtn = await screen.findByText(/Start Recipe/i);
-    expect(startRecipeBtn).toBeInTheDocument();
-    userEvent.click(startRecipeBtn);
-    await waitFor(() => expect(history.location.pathname).toBe('/meals/52771/in-progress'));
-  });
-  test('testa botao Continuar receira', async () => {
-    global.window.localStorage.setItem('inProgressRecipes', '{ "meals": {"52771": []}}');
-    renderWithRouter(<App />, MEALS_ROUTE);
-
-    waitFor(() => {
-      const continuRecipeBtn = screen.getByText(/Continue Recipe/i);
-      expect(continuRecipeBtn).toBeInTheDocument();
-    });
-  });
   test('Testa se salva no localStorage', async () => {
     localStorage.setItem('doneRecipes', '[{"id":"52478"}]');
     renderWithRouter(<App />, MEALS_ROUTE);
@@ -97,6 +79,38 @@ describe('testa o Component RecipeDEtails/MealsDetails', () => {
     const favoriteFromLocalStorage = localStorage.getItem('favoriteRecipes');
     const favorites = JSON.parse(favoriteFromLocalStorage);
     expect(favorites).toHaveLength(0);
+  });
+
+  test('testa se é possível marcar ingredientes como concluídos e devem permanecer marcados entre reloads', async () => {
+    renderWithRouter(<App />, MEALS_ROUTE);
+    let ingredientes;
+    await waitFor(() => {
+      ingredientes = screen.getAllByTestId(/-ingredient-step/i);
+    });
+    const button = screen.getByTestId(BTN_FINISH);
+    expect(ingredientes).toHaveLength(8);
+
+    expect(button).not.toBeDisabled();
+
+    ingredientes.forEach((el) => {
+      act(() => {
+        userEvent.click(el);
+      });
+    });
+
+    renderWithRouter(<App />, MEALS_ROUTE);
+
+    await waitFor(() => {
+      ingredientes = screen.getAllByTestId(/-ingredient-step/i);
+    });
+
+    expect(ingredientes).toHaveLength(8);
+
+    ingredientes.forEach((el) => {
+      expect(el.firstChild).toBeChecked();
+    });
+
+    expect(button).not.toBeDisabled();
   });
 });
 
@@ -131,15 +145,49 @@ describe('Testa o componente Drinks', () => {
     expect(recipeCategory).toBeInTheDocument();
     expect(instructions).toBeInTheDocument();
   });
+
   test('Testa se salva no localStorage', async () => {
     localStorage.setItem('doneRecipes', '[{"id":"52478"}]');
     renderWithRouter(<App />, DRINK_ROUTE);
 
     const favoriteBtn = await screen.findByTestId(FAVORITE_BTN);
     expect(favoriteBtn).toBeInTheDocument();
+
     userEvent.click(favoriteBtn);
     const favoriteFromLocalStorage = localStorage.getItem('favoriteRecipes');
     const favorites = JSON.parse(favoriteFromLocalStorage);
     expect(favorites).toHaveLength(1);
+  });
+
+  test('testa se é possível marcar ingredientes como concluídos e devem permanecer marcados entre reloads', async () => {
+    renderWithRouter(<App />, DRINK_ROUTE);
+    let ingredientes;
+    await waitFor(() => {
+      ingredientes = screen.getAllByTestId(/-ingredient-step/i);
+    });
+    const button = screen.getByTestId(BTN_FINISH);
+    expect(ingredientes).toHaveLength(8);
+
+    expect(button).not.toBeDisabled();
+
+    ingredientes.forEach((el) => {
+      act(() => {
+        userEvent.click(el);
+      });
+    });
+
+    renderWithRouter(<App />, DRINK_ROUTE);
+
+    await waitFor(() => {
+      ingredientes = screen.getAllByTestId(/-ingredient-step/i);
+    });
+
+    expect(ingredientes).toHaveLength(8);
+
+    ingredientes.forEach((el) => {
+      expect(el.firstChild).toBeChecked();
+    });
+
+    expect(button).not.toBeDisabled();
   });
 });
