@@ -6,8 +6,10 @@ export default function useFetch() {
   const fetchAPI = async (url) => {
     const response = await fetch(url);
     const json = await response.json();
+
     return json;
   };
+  const [errors, setErrors] = useState(null);
 
   const fetchData = async (pageName, radioOption, input) => {
     setIsLoading(true);
@@ -32,14 +34,36 @@ export default function useFetch() {
     }
 
     setIsLoading(false);
+
     return fetchAPI(url);
   };
 
   const fetchCategories = (pageName) => fetchAPI(`https://www.the${pageName}db.com/api/json/v1/1/list.php?c=list`);
 
+  const fetchRecipe = async (pageName, id) => {
+    try {
+      setIsLoading(true);
+
+      const url = `https://www.the${pageName}db.com/api/json/v1/1/lookup.php?i=${id}`;
+
+      const response = await fetch(url);
+      const json = await response.json();
+
+      setIsLoading(false);
+
+      return json;
+    } catch (error) {
+      setErrors(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     fetchData,
     fetchCategories,
+    fetchRecipe,
     isLoading,
+    errors,
   };
 }
