@@ -2,6 +2,23 @@ import { screen, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
+import oneDrink from '../../cypress/mocks/oneDrink';
+import meals from '../../cypress/mocks/meals';
+
+const mockDrinks = {
+  drinks: [
+    {
+      idDrink: '345',
+      strDrink: 'drink',
+      strDrinkThumb: 'thumb',
+    },
+    {
+      idDrink: '356',
+      strDrink: 'drink2',
+      strDrinkThumb: 'thumb2',
+    },
+  ],
+};
 
 describe('Testa o componente SearchBar', () => {
   afterEach(() => jest.clearAllMocks());
@@ -104,7 +121,11 @@ describe('Testa o componente SearchBar', () => {
   test('Se redireciona para a página de detalhes do item se houver somente um item na lista', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue({ drinks: [{ idDrink: '345' }] }),
+      json: jest.fn().mockResolvedValueOnce(mockDrinks)
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValue(meals),
     });
 
     const { history } = renderWithRouter(<App />);
@@ -126,7 +147,7 @@ describe('Testa o componente SearchBar', () => {
     expect(global.fetch).toHaveBeenCalled();
 
     await new Promise((res) => { setTimeout(res, 100); });
-    expect(history.location.pathname).toBe('/drinks/345');
+    expect(history.location.pathname).toBe('/drinks/178319');
   });
 
   test('Se o alert aparece quando não há elementos retornados pelo fetch', async () => {

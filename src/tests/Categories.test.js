@@ -18,9 +18,7 @@ describe('Testa a pagina Categories', () => {
       history.push('/meals');
     });
 
-    await new Promise((res) => { setTimeout(res, 100); });
-
-    const beefCategoryBtn = screen.getByTestId('Beef-category-filter');
+    const beefCategoryBtn = await screen.findByTestId('Beef-category-filter');
     act(() => {
       userEvent.click(beefCategoryBtn);
     });

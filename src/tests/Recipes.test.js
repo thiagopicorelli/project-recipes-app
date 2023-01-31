@@ -4,6 +4,8 @@ import React from 'react';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
 import categoryMock from './mock/categoryMock';
+import oneDrink from '../../cypress/mocks/oneDrink';
+import meals from '../../cypress/mocks/meals';
 
 describe('Testa o componente SearchBar', () => {
   afterEach(() => jest.clearAllMocks());
@@ -57,7 +59,11 @@ describe('Testa o componente SearchBar', () => {
   test('Testa se o usuário é redirecionado para a página de detalhes da receita', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockDrinks),
+      json: jest.fn().mockResolvedValueOnce(mockDrinks)
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValue(meals),
     });
 
     const { history } = renderWithRouter(<App />);
@@ -65,16 +71,14 @@ describe('Testa o componente SearchBar', () => {
       history.push('/drinks');
     });
 
-    await new Promise((res) => { setTimeout(res, 1000); });
-
-    const recipeCard = screen.getByTestId('0-card-img');
+    const recipeCard = await screen.findByTestId('0-card-img');
     act(() => {
       userEvent.click(recipeCard);
     });
 
     await new Promise((res) => { setTimeout(res, 1000); });
 
-    expect(history.location.pathname).toEqual('/drinks/345');
+    expect(history.location.pathname).toEqual('/drinks/178319');
   });
 });
 

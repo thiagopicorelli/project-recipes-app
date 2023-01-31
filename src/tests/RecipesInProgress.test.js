@@ -11,7 +11,7 @@ import drinks from '../../cypress/mocks/drinks';
 import meals from '../../cypress/mocks/meals';
 
 const MEALS_ROUTE = { initialEntries: ['/meals/52771/in-progress'] };
-const DRINK_ROUTE = { initialEntries: ['/drinks/15997in-progress'] };
+const DRINK_ROUTE = { initialEntries: ['/drinks/15997/in-progress'] };
 const FAVORITE_BTN = 'favorite-btn';
 const BTN_FINISH = 'finish-recipe-btn';
 
@@ -166,7 +166,7 @@ describe('Testa o componente Drinks', () => {
       ingredientes = screen.getAllByTestId(/-ingredient-step/i);
     });
     const button = screen.getByTestId(BTN_FINISH);
-    expect(ingredientes).toHaveLength(8);
+    expect(ingredientes).toHaveLength(3);
 
     expect(button).not.toBeDisabled();
 
@@ -182,7 +182,7 @@ describe('Testa o componente Drinks', () => {
       ingredientes = screen.getAllByTestId(/-ingredient-step/i);
     });
 
-    expect(ingredientes).toHaveLength(8);
+    expect(ingredientes).toHaveLength(3);
 
     ingredientes.forEach((el) => {
       expect(el.firstChild).toBeChecked();
