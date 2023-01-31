@@ -7,7 +7,6 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import useFavorite from '../hooks/useFavorite';
 import { RecipesContext } from '../context/RecipesProvider';
-import IngredientListCheck from '../components/IngredientesCheckboc';
 
 function RecipeInProgress() {
   const history = useHistory();
@@ -15,11 +14,11 @@ function RecipeInProgress() {
   const id = location.pathname.split('/')[2];
   const page = location.pathname.split('/')[1];
   const [copied, setCopied] = useState(false);
-  const [recipeFinish, setRecipeFinish] = useState();
+  // const [recipeFinish, setRecipeFinish] = useState();
   const [ingredientCheck, setIngredientCheck] = useState([]);
   const { toggleFavorite } = useFavorite();
   const [btnDesable, setBtndesable] = useState(true);
-  const [removeButtonFinish, setRemoveButtonFinish] = useState(false);
+  // const [removeButtonFinish, setRemoveButtonFinish] = useState(false);
 
   const {
     getRecommendedRecipes,
@@ -58,8 +57,8 @@ function RecipeInProgress() {
     toggleFavorite(recipe[0]);
   }, [favorite, recipe, toggleFavorite]);
 
-  const handleCheck = ((ingredientCheck) => {
-    setIngredientCheck(ingredientChck);
+  const handleCheck = ((i) => {
+    setIngredientCheck(i);
     localStorage.setItem('inProgressRecipes', JSON.stringify(ingredientCheck));
   });
 
