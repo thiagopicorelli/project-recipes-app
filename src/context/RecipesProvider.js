@@ -41,16 +41,17 @@ function RecipesProvider({ children }) {
     };
     if (!page) return;
 
-    const a = JSON.parse(localStorage.getItem('inProgressRecipes') || '{}');
-    if (!a[page]) a[page] = {};
+    const inProgressRecipes = JSON.parse(localStorage
+      .getItem('inProgressRecipes') || '{}');
+    if (!inProgressRecipes[page]) inProgressRecipes[page] = {};
 
     let newIngredients = ingredientsArray();
 
-    if (a[page][id]) {
+    if (inProgressRecipes[page][id]) {
       newIngredients = newIngredients
         .map((ingredient) => ({
           ...ingredient,
-          checked: a[page][id]
+          checked: inProgressRecipes[page][id]
             .some((name) => name === ingredient.ingredient),
         }));
     }

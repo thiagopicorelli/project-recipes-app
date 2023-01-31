@@ -21,19 +21,17 @@ function RecipeDetails() {
   const {
     ingredients,
     recommended,
-    getRecommendedRecipes,
+    getPageInfo,
     done,
     inProgress,
     favorite,
     setFavorite,
     checkRecipeStatus,
     recipe,
-    getRecipe,
   } = useContext(RecipesContext);
 
   useEffect(() => {
-    getRecipe(page, id);
-    getRecommendedRecipes(page);
+    getPageInfo(id, page);
   }, [page, id]);
 
   useEffect(() => {
