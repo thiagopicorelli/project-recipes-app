@@ -4,10 +4,10 @@ import React from 'react';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
 import categoryMock from './mock/categoryMock';
-import oneDrink from '../../cypress/mocks/oneDrink';
-import oneMeal from '../../cypress/mocks/oneMeal';
-import drinks from '../../cypress/mocks/drinks';
-import meals from '../../cypress/mocks/meals';
+import oneDrink from './mock/oneDrink';
+import oneMeal from './mock/oneMeal';
+import drinks from './mock/drinks';
+import meals from './mock/meals';
 
 describe('Testa o componente SearchBar', () => {
   afterEach(() => jest.clearAllMocks());

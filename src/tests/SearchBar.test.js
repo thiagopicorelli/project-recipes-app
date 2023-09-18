@@ -2,8 +2,8 @@ import { screen, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithRouter } from './helpers/renderWithRouter';
 import App from '../App';
-import oneDrink from '../../cypress/mocks/oneDrink';
-import meals from '../../cypress/mocks/meals';
+import oneDrink from './mock/oneDrink';
+import meals from './mock/meals';
 
 const mockDrinks = {
   drinks: [

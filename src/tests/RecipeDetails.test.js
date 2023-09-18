@@ -4,11 +4,11 @@ import { screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from './helpers/renderWithRouter';
 
 import App from '../App';
-import oneMeal from '../../cypress/mocks/oneMeal';
-import oneDrink from '../../cypress/mocks/oneDrink';
+import oneMeal from './mock/oneMeal';
+import oneDrink from './mock/oneDrink';
 
-import drinks from '../../cypress/mocks/drinks';
-import meals from '../../cypress/mocks/meals';
+import drinks from './mock/drinks';
+import meals from './mock/meals';
 
 const MEALS_ROUTE = { initialEntries: ['/meals/52771'] };
 const DRINK_ROUTE = { initialEntries: ['/drinks/15997'] };
