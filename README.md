@@ -1,4 +1,5 @@
 # App de Receitas
+![App](https://github.com/thiagopicorelli/project-recipes-app/assets/60528610/962e0b0e-ab49-4bc0-9448-aa6a9d0839f1)
 
 Aplicação feita em grupo no curso da Trybe, de um aplicativo de receitas consumindo uma API externa, criado para smartphones e utilizando **React**.
 
@@ -9,6 +10,7 @@ Aplicação feita em grupo no curso da Trybe, de um aplicativo de receitas consu
 Utiliza React 18.2.0.
 
 `npm install && npm start` para instalar e iniciar o projeto.
+
 `npm run test` para rodar os testes.
 
 ## Linguagens
