@@ -1,7 +1,7 @@
 # App de Receitas
 ![App](https://github.com/thiagopicorelli/project-recipes-app/assets/60528610/cbd26bc0-a88b-45d9-a2b6-56716d891e96)
 
-Aplicação feita em grupo no curso da Trybe, de um aplicativo de receitas consumindo uma API externa, criado para smartphones e utilizando **React**.
+Aplicação feita em grupo no curso da Trybe, de uma página web de receitas consumindo uma API externa, criado para smartphones e utilizando **React**.
 
 ## Pasta trabalhada
 [/src](https://github.com/thiagopicorelli/project-recipes-app/tree/main/src)
